@@ -37,4 +37,6 @@ To clone this repository to your local machine and set up the project, follow th
 QuantWeb is a web application focused on quantitative finance and analytics. It leverages Django for backend development, providing tools for backtesting trading strategies, analyzing financial data, and more.
 
 
-This README provides a clear structure for new users to understand what the project is about, how to set it up locally, who contributes to it, and its licensing terms. Adjust and expand it further as your project evolves and adds new features.
+This README provides a clear structure for new users to understand what the project is about, how to set it up locally.
+
+Last Update: 20th June, 2024

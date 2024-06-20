@@ -11,3 +11,10 @@ class StrategyForm(forms.ModelForm):
      class Meta:
          model=CommonModel
          fields= ['ticker','start_date','end_date','stop_loss','strategy']
+
+class csvForm(forms.ModelForm):
+    csv_file=forms.FileField()
+    stop_loss=forms.DecimalField(max_digits=10, decimal_places=2)
+    class Meta:
+        model=CommonModel
+        fields=['csv_file','stop_loss']

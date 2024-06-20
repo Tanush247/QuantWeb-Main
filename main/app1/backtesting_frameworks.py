@@ -181,17 +181,17 @@ def parameters(data, trade, tnx,capital_initial=1000000):
     trade['drawdown'] = drawdown 
     trade['dip'] = dip
     
-    print("Benchmark Return (in rupees):", final_value - capital_initial)
-    print("Number of closed trades:", len(trade))
-    print("Max holding time:", np.max(trade['duration']))
-    print("Avg Holding time:", np.mean(trade['duration']))
-    print("Gross Profit:", trade['P and L'].sum())
-    print("Net Profit:", trade['P and L'].sum() - 20 * len(trade))
-    print("Max drawdown (in %):", 100 * np.max(trade['drawdown']))
-    print("Avg drawdown (in %):", 100 * np.mean(trade['drawdown']))
-    print("Max dip (in %):", np.max(trade['dip']))
-    print("Avg dip (in %):", np.mean(trade['dip']))
-    print("Sharpe Ratio: ",np.sqrt(252)*(np.mean(returns_for_sharpe)/(np.std(returns_for_sharpe))))
+    # print("Benchmark Return (in rupees):", final_value - capital_initial)
+    # print("Number of closed trades:", len(trade))
+    # print("Max holding time:", np.max(trade['duration']))
+    # print("Avg Holding time:", np.mean(trade['duration']))
+    # print("Gross Profit:", trade['P and L'].sum())
+    # print("Net Profit:", trade['P and L'].sum() - 20 * len(trade))
+    # print("Max drawdown (in %):", 100 * np.max(trade['drawdown']))
+    # print("Avg drawdown (in %):", 100 * np.mean(trade['drawdown']))
+    # print("Max dip (in %):", np.max(trade['dip']))
+    # print("Avg dip (in %):", np.mean(trade['dip']))
+    # print("Sharpe Ratio: ",np.sqrt(252)*(np.mean(returns_for_sharpe)/(np.std(returns_for_sharpe))))
 
     return (trade['P and L'].sum() / capital_initial) * 100, final_value - capital_initial, len(trade), np.max(trade['duration']),np.mean(trade['duration']),trade['P and L'].sum(),trade['P and L'].sum() - 20 * len(trade),100 * np.max(trade['drawdown']),100 * np.mean(trade['drawdown']), np.max(trade['dip']),np.mean(trade['dip']),np.sqrt(252)*(np.mean(returns_for_sharpe)/(np.std(returns_for_sharpe)))
         

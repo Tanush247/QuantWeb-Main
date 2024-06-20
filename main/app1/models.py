@@ -35,3 +35,8 @@ class PythonCodeWidget(forms.Textarea):
 class CommonModel(models.Model):
     name = models.CharField(max_length=100)
     source = PythonCodeField(blank=True, null=True)
+
+class UserModel(models.Model):
+    name=models.CharField(max_length=100)
+    source=PythonCodeField(blank=True, null=True)
+

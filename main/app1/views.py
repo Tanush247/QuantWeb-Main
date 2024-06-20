@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from .models import CommonModel
-from .forms import StrategyForm
+from .forms import StrategyForm,csvForm
 import yfinance as yf
 from .backtesting_frameworks import backtest_1,parameters
 from django.contrib.auth.decorators import login_required
-
+import pandas as pd
+import numpy as np
 
 
 def execute_python_code(code_string, *args, **kwargs):
@@ -33,8 +34,67 @@ def home(request):
 
 @login_required
 def csv(request):
+    user = request.user
+    error_message=None
+    results=None
+    if request.method == "POST":
+        form = csvForm(request.POST,request.FILES)
+        if form.is_valid():
+            csv_file = request.FILES['csv_file']
+            df = pd.read_csv(csv_file, index_col=0, parse_dates=True)
+            print(df)
+            stop_loss=form.cleaned_data['stop_loss']
+            stop_loss=float(stop_loss)
+            start_date=df.index[0]
+            end_date=df.index[len(df)-1]
+            # Save the CSV file to the database
+            tnx=yf.download('^TNX',start_date,end_date)
+            a,capital=backtest_1(df,stop_loss)
+            results=parameters(df,a,tnx)
+        else:
+            error_message = f"Backtesting failed"
+    else:
+        form=csvForm()
+    if(results==None):
+       context = {
+        'first':None,
+        'second':None,
+        'third':None,
+        'four':None,
+        'five':None,
+        'six':None,
+        'seven':None,
+        'eight':None,
+        'nine':None,
+        'ten':None,
+        'eleven':None,
+        'twelve':None,
+        'form': form,
+        
+        'error_message': error_message,
+        } 
+    else:
+
+        context = {
+            'first':results[0],
+            'second':results[1],
+            'third':results[2],
+            'four':results[3],
+            'five':results[4],
+            'six':results[5],
+            'seven':results[6],
+            'eight':results[7],
+            'nine':results[8],
+            'ten':results[9],
+            'eleven':results[10],
+            'twelve':results[11],
+            'form': form,
+            
+            'error_message': error_message,
+        }
+    return render(request, 'app1/csv.html', context)
+
     
-    return render(request,'app1/hello.html')
 @login_required
 def backtesting(request):
     user = request.user
@@ -75,7 +135,7 @@ def backtesting(request):
         'first':None,
         'second':None,
         'third':None,
-        'fourth':None,
+        'four':None,
         'five':None,
         'six':None,
         'seven':None,
@@ -94,7 +154,7 @@ def backtesting(request):
             'first':results[0],
             'second':results[1],
             'third':results[2],
-            'fourth':results[3],
+            'four':results[3],
             'five':results[4],
             'six':results[5],
             'seven':results[6],

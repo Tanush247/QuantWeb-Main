@@ -37,6 +37,7 @@ class CommonModel(models.Model):
     source = PythonCodeField(blank=True, null=True)
 
 class UserModel(models.Model):
+    owner=models.CharField(max_length=100)
     name=models.CharField(max_length=100)
     source=PythonCodeField(blank=True, null=True)
 

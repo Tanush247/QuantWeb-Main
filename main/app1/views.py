@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import CommonModel
-from .forms import StrategyForm,csvForm
+from .models import CommonModel,UserModel
+from .forms import StrategyForm,csvForm,userstrategy
 import yfinance as yf
 from .backtesting_frameworks import backtest_1,parameters
 from django.contrib.auth.decorators import login_required
@@ -31,6 +31,33 @@ def execute_python_code(code_string, *args, **kwargs):
 @login_required  
 def home(request):
     return render(request,'app1/hello.html')
+
+@login_required
+def created(request):
+    user=request.user
+    error_message=None
+    if request.method =='POST':
+        form=userstrategy(request.POST)
+        if form.is_valid():
+            strategy=form.cleaned_data['strategy']
+            source=form.cleaned_data['source']
+            object1=UserModel(owner=user,source=source,name=strategy)
+            object1.save()
+            return render(request,'app1/hello.html')
+        else:
+            error_message="Invalid"
+    else:
+        form=userstrategy()
+
+    context={
+
+        'error':error_message,
+        'form':form
+    }
+    return render(request,'app1/your_strategy.html',context)
+
+        
+    
 
 @login_required
 def csv(request):
@@ -114,6 +141,7 @@ def backtesting(request):
             tnx=yf.download('^TNX',start_date,end_date)
             # Query CommonModel based on the strategy name
             object1 = CommonModel.objects.filter(name=strategy).first()
+            object2=UserModel.objects.filter(owner=user,name=strategy).first()
             if object1:
                 python_code_string = object1.source
                 
@@ -127,7 +155,18 @@ def backtesting(request):
                 
 
             else:
-                error_message = f"No strategy found with name '{strategy}'"
+                if(object2):
+                    python_code_string = object2.source
+                
+                    # Example arguments for the function call
+                    
+                    # Execute the Python code (assuming 'hello' function exists)
+                    data, error_message = execute_python_code(python_code_string,data)
+                    a,capital=backtest_1(data,stop_loss)
+                    results=parameters(data,a,tnx)
+                else:
+                    error_message = f"No strategy found with name '{strategy}'"               
+                
     else:
         form = StrategyForm()
     if(results==None):

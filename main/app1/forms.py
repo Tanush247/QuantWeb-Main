@@ -20,7 +20,7 @@ class StrategyForm(forms.ModelForm):
     start_date = forms.DateField()
     end_date = forms.DateField()
     stop_loss = forms.DecimalField(max_digits=10, decimal_places=2)
-    strategy = forms.CharField()
+    strategy = forms.ModelChoiceField(queryset=CommonModel.objects.all())
     class Meta:
         model = CommonModel
         fields = ['ticker', 'start_date', 'end_date', 'stop_loss', 'strategy']

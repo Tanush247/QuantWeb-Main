@@ -1,0 +1,189 @@
+/* body {
+  background: #fafafa;
+  color: #333333;
+  margin-top: 5rem;
+} */
+body {
+    background-image: url("/static/technical/images/b6.jpg");
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: #444444;
+  }
+  
+  ul {
+    margin: 0;
+  }
+  
+  .bg-steel {
+    background-color: #5f788a;
+  }
+  
+  .site-header .navbar-nav .nav-link {
+    color: #cbd5db;
+  }
+  
+  .site-header .navbar-nav .nav-link:hover {
+    color: #ffffff;
+  }
+  
+  .site-header .navbar-nav .nav-link.active {
+    font-weight: 500;
+  }
+  
+  .content-section {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+  }
+  
+  .article-title {
+    color: #444444;
+  }
+  
+  a.article-title:hover {
+    color: #428bca;
+    text-decoration: none;
+  }
+  
+  .article-content {
+    white-space: pre-line;
+  }
+  
+  .article-img {
+    height: 65px;
+    width: 65px;
+    margin-right: 16px;
+  }
+  
+  .article-metadata {
+    padding-bottom: 1px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #e3e3e3
+  }
+  
+  .article-metadata a:hover {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .article-svg {
+    width: 25px;
+    height: 25px;
+    vertical-align: middle;
+  }
+    
+    .article-title {
+    color: #444444;
+    }
+    
+    a.article-title
+    {
+    color: #428bca;
+    text-decoration: none;
+    }
+    
+    .article-content {
+    white-space: pre-line;
+    }
+    
+    .article-img {
+    height: 65px;
+    width: 65px;
+    margin-right: 16px;
+    }
+    
+    .article-metadata {
+    padding-bottom: 1px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #e3e3e3
+    }
+    
+    .article-metadata a
+    {
+    color: #333;
+    text-decoration: none;
+    }
+    
+    .article-svg {
+    width: 25px;
+    height: 25px;
+    vertical-align: middle;
+    }
+    
+    .account-img {
+    height: 125px;
+    width: 125px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .account-heading {
+    font-size: 2.5rem;
+  }
+  
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-image: none;
+    }
+    
+    .carousel-control-prev-icon::after,
+    .carousel-control-next-icon::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    }
+    
+    .carousel-control-prev-icon::after {
+    transform: rotate(135deg);
+    }
+    
+    .carousel-control-next-icon::after {
+    transform: rotate(-45deg);
+  }
+  
+  .carousel-container {
+    display: flex;
+    justify-content: space-between;
+    width: 150%;
+  }
+  
+  .carousel {
+    width: 48%;
+    height: 500px; /* Fixed height for the carousels */
+    overflow: hidden; /* Ensure content does not overflow */
+  }
+  
+  .carousel-item {
+    height: 100%;
+  }
+  
+  .carousel-item .card {
+    height: 100%; /* Make the card fill the carousel item */
+    background-color: #a8b3b8
+  }
+  
+  .carousel-item .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%; /* Make the card body fill the card */
+  }
+  
+  .carousel-item img {
+    max-height: 200px; /* Fixed height for images */
+    width: auto;
+    margin-top: 1rem;
+  }
+  

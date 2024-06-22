@@ -6,51 +6,142 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
+            background: url('https://alternativecreditinvestor.com/wp-content/uploads/2020/04/shutterstock_1086555023.jpg') no-repeat center center fixed; 
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #f0f2f5;
+            background-position: center;
         }
-        .header, .button-group {
-            background-color: #343a40;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
+        .navbar-custom {
+            background-color: rgb(0, 0, 0);
+            padding: 10px 20px;
         }
-        .form-container {
-            max-width: 800px;
-            margin: 30px auto;
+        .navbar-custom .navbar-brand {
+            color: #f0f2f5;
+            display: flex;
+            align-items: center; /* Center items vertically */
+        }
+        .navbar-custom .navbar-brand .icon {
+            width: 40px; /* Adjust as needed */
+            height: 40px; /* Adjust as needed */
+            border-radius: 50%;
+            background-image: url('https://r2.erweima.ai/i/5TxPg3z6TEar2SROBXu5IQ.jpg'); /* Replace with your icon image URL */
+            background-size: cover;
+            border-color: aqua;
+            margin-right: 10px; /* Adjust spacing */
+        }
+        .navbar-custom .nav-link {
+            color: #f0f2f5;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #ff9800;
+        }
+        .navbar-custom .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .navbar-custom .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-width='2' linecap='round' linejoin='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+        .header {
+            background-color: rgb(0, 0, 0);
+            color: #f0f2f5;
             padding: 20px;
-            background-color: #ffffff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
-        .results-container {
+        .button-group {
             margin-top: 30px;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
+        
+        
         .btn-custom {
             margin-right: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            background-color: #ff5722;
+            border: none;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #ff9800;
+            transform: scale(1.05);
+            color: #fff;
+        }
+        footer {
+            background-color: rgb(15, 31, 78);
+            color: #f0f2f5;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -5px 15px rgb(0, 0, 0);
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="header d-flex justify-content-between align-items-center mb-4">
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <a class="navbar-brand" href="#">
+            <div class="icon"></div> <!-- Icon div -->
+            Backtesting Dashboard
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app1:backtesting' %}">Backtesting from Data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app1:csv' %}">Backtesting from CSV</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app1:created' %}">Creating Your Own Strategy</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <form action="{% url 'logout' %}" method="post" class="form-inline">
+                        
+                        <button type="submit" class="btn btn-danger ml-2">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5 pt-5">
+        <div class="header">
             <h1 class="mb-0">Backtesting Dashboard</h1>
-            <form action="{% url 'logout' %}" method="post" class="form-inline">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
         </div>
 
         <div class="button-group mb-4 d-flex justify-content-center">
-            <a href="{% url 'app1:backtesting' %}" class="btn btn-primary btn-custom">Backtesting from Data</a>
-            <a href="{% url 'app1:csv' %}" class="btn btn-primary btn-custom">Backtesting from CSV</a>
-            <a href="{% url 'app1:created' %}" class="btn btn-primary btn-custom">Creating Your Own Strategy</a>
+            <a href="{% url 'app1:backtesting' %}" class="btn btn-custom">Backtesting from Data</a>
+            <a href="{% url 'app1:csv' %}" class="btn btn-custom">Backtesting from CSV</a>
+            <a href="{% url 'app1:created' %}" class="btn btn-custom">Creating Your Own Strategy</a>
         </div>
 
+        <div class="form-container">
+            <!-- Form Content -->
+        </div>
+
+        <div class="results-container">
+            <!-- Results Content -->
+        </div>
     </div>
+
+    <footer>
+        <p>&copy; 2024 Backtesting Dashboard. All rights reserved.</p>
+    </footer>
+
     <!-- Include Bootstrap JS and dependencies (optional) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>

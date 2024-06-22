@@ -39,10 +39,17 @@ deactivate nondestructive
 if [ "${OSTYPE:-}" = "cygwin" ] || [ "${OSTYPE:-}" = "msys" ] ; then
     # transform D:\path\to\venv to /d/path/to/venv on MSYS
     # and to /cygdrive/d/path/to/venv on Cygwin
+<<<<<<< HEAD
     export VIRTUAL_ENV=$(cygpath "C:\Users\ASUS\OneDrive\Desktop\QuantWeb\QuantWeb-Main\virtual")
 else
     # use the path as-is
     export VIRTUAL_ENV="C:\Users\ASUS\OneDrive\Desktop\QuantWeb\QuantWeb-Main\virtual"
+=======
+    export VIRTUAL_ENV=$(cygpath "C:\Users\hsvr2\OneDrive\Desktop\quantweb_project\QuantWeb-Main\virtual")
+else
+    # use the path as-is
+    export VIRTUAL_ENV="C:\Users\hsvr2\OneDrive\Desktop\quantweb_project\QuantWeb-Main\virtual"
+>>>>>>> 628d8839e83c67eec8d25b40afd1c775e1897743
 fi
 
 _OLD_VIRTUAL_PATH="$PATH"

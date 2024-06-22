@@ -11,7 +11,7 @@ body {
     max-width: 650px;
 }
 .form-container {
-    padding: 20px;
+    padding: 7px;
     
     background: linear-gradient(135deg,rgb(3, 151, 243),rgb(8, 188, 122));
     border-radius: 8px;
@@ -58,14 +58,4 @@ legend {
     margin-bottom: 40px;
     background-color: black;
     color: white;
-}
-
-.top-left-image {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
 }

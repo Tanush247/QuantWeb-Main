@@ -8,7 +8,11 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
+<<<<<<< HEAD
 set VIRTUAL_ENV=C:\Users\ASUS\OneDrive\Desktop\QuantWeb\QuantWeb-Main\virtual
+=======
+set VIRTUAL_ENV=C:\Users\hsvr2\OneDrive\Desktop\quantweb_project\QuantWeb-Main\virtual
+>>>>>>> 628d8839e83c67eec8d25b40afd1c775e1897743
 
 if not defined PROMPT set PROMPT=$P$G
 

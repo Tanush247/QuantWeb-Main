@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #!C:\Users\ASUS\OneDrive\Desktop\QuantWeb\QuantWeb-Main\virtual\Scripts\python.exe
+=======
+#!C:\Users\hsvr2\OneDrive\Desktop\quantweb_project\QuantWeb-Main\virtual\Scripts\python.exe
+>>>>>>> 628d8839e83c67eec8d25b40afd1c775e1897743
 
 import datetime
 import os

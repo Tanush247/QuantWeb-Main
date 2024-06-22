@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Backtesting Dashboard</title>
     <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
         body {
             background: url('https://alternativecreditinvestor.com/wp-content/uploads/2020/04/shutterstock_1086555023.jpg') no-repeat center center fixed; 
@@ -127,6 +129,8 @@
             <a href="{% url 'app1:backtesting' %}" class="btn btn-custom">Backtesting from Data</a>
             <a href="{% url 'app1:csv' %}" class="btn btn-custom">Backtesting from CSV</a>
             <a href="{% url 'app1:created' %}" class="btn btn-custom">Creating Your Own Strategy</a>
+            <a href="{% url 'technical-home' %}" class="btn btn-custom">Technical Indicators</a>
+            <a href="{% url 'risk-home' %}" class="btn btn-custom">Risk Management</a>
         </div>
 
         <div class="form-container">

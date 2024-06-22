@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'app1',
     'crispy_forms',
     'django.contrib.admin',
+    'technical.apps.TechnicalConfig',
+    'risk.apps.RiskConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

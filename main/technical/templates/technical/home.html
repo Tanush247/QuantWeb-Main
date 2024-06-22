@@ -1,0 +1,65 @@
+{% extends "technical/base.html" %}
+{% load static %}
+
+{% block content %}
+    <h1 class="text-center mb-4">Technical Indicators</h1>
+
+    <div class="carousel-container">
+        <div id="carouselExampleControls1" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                {% for indicator in indicators %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <h2 class="card-title">{{ indicator.name }}</h2>
+                                <p class="card-text">{{ indicator.description }}</p>
+                                <img src="{% static indicator.image_url %}" class="d-block w-100" alt="{{ indicator.name }}">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls1" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls1" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                {% for code in codes %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+                                <h2 class="card-title">{{ code.name }}</h2>
+                                <p class="card-text">{{ code.description }}</p>
+                                <img src="{% static code.image_url %}" class="d-block w-100" alt="{{ code.name }}">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls2" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls2" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            $('#carouselExampleControls1').carousel();
+            $('#carouselExampleControls2').carousel();
+        });
+    </script>
+{% endblock %}

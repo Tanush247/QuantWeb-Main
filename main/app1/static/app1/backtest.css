@@ -1,0 +1,61 @@
+body {
+    background-image: url('/static/app1/5040007.jpg');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
+        
+}
+.form-container, .results-container {
+    margin-top: 30px;
+    max-width: 650px;
+}
+.form-container {
+    padding: 7px;
+    
+    background: linear-gradient(135deg,rgb(3, 151, 243),rgb(8, 188, 122));
+    border-radius: 8px;
+    box-shadow: 5 5 10px rgba(0, 0, 0, 0.986);
+}
+.form-group{
+    background: linear-gradient(120deg,lightblue,pink);
+}
+.results-container {
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.results-container h2 {
+    font-family: 'Times New Roman', Times, serif;
+    color: #333;
+   
+}
+.results-container .list-group-item {
+    display: flex;
+    background: linear-gradient(120deg,lightblue,pink);
+    align-items: center;
+    border-width: 0.1pc;
+    font-size: 1.1em;
+    font-weight: bold;
+    
+   
+}
+
+
+h1{
+    font-family: "Bahnschrift SemiBold Condensed";
+    font-size: 55px;
+    text-align: center;
+    text-decoration: underline;
+    margin-bottom: 40px;
+    color: rgb(8, 217, 151);
+}
+legend {
+    text-align: center;
+    font-weight: bold;
+    font-size: 40px;
+    margin-bottom: 40px;
+    background-color: black;
+    color: white;
+}

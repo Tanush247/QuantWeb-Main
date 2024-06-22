@@ -1,24 +1,19 @@
 <!-- app1/templates/app1/result.html -->
+{% load static %} 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Backtesting Form</title>
     <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .form-container {
-            max-width: 600px;
-            margin: auto;
-        }
-        .results-container {
-            margin-top: 30px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'app1/backtest.css' %}">
 </head>
 <body>
+    <img src="/static/app1/image/images (1).jpeg" alt="FINANCE AND ANAKYTICS CLUB" class="top-left-image">
+    <h1 class="mb-4">QuantWeb</h1>
     <div class="container mt-5 form-container">
-        <h1 class="mb-4">QuantWeb</h1>
-        <form method="post" enctype="multipart/form-data" class="border p-4 bg-light">
+       
+        <form method="post" enctype="multipart/form-data" class="border p-4 bg-light" action="#results-section">
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Backtesting csv</legend>
@@ -32,13 +27,14 @@
                 </div>
                 
             </fieldset>
-            <div class="form-group">
+            <div class="form-group1">
                 <button class="btn btn-outline-info" type="submit">Submit</button>
             </div>
         </form>
 
-        <div class="results-container">
-            <h2>Results:</h2>
+        <div class="results-container" id="results-section">
+            <!-- <h2>Results:</h2> -->
+            <legend class="border-bottom mb-4">Result</legend>
             <ul class="list-group">
                 <li class="list-group-item">RETURNS (in %): {{ first }}</li>
                 <li class="list-group-item">Benchmark Return (in rupees): {{ second }}</li>

@@ -25,7 +25,10 @@
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
             <div class="container">
-                <a class="navbar-brand mr-4" href="{% url 'technical-home' %}">Risk Management</a>
+                <a class="navbar-brand mr-4" href="{% url 'risk-home' %}">
+                    <img src="{% static 'technical/images/logo2.png' %}" alt="Company Logo" style="height: 40px;">
+                    Risk Management</a>
+                {% comment %} <a class="navbar-brand mr-4" href="{% url 'technical-home' %}">Risk Management</a> {% endcomment %}
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>

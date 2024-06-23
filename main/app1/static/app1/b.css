@@ -1,0 +1,215 @@
+/* styles.css */
+body{
+    background-color: black;
+}
+h1, h2, p, span{
+    color: white;
+    font-family: DM sans-serif;
+}
+
+
+/* Navbar styles */
+.container {
+  max-width: 100%; /* Ensure the container spans the full width */
+  padding-left: 0;
+  padding-right: 0;
+}
+.navbar {
+  background-color: transparent;
+  width: 100%; /* Adjust the width as needed */
+  margin: 0 auto; /* Center the navbar */
+    backdrop-filter: blur(10px); /* Blur effect */
+  margin-bottom: 0;
+  border-bottom: 2px solid #141418;
+}
+.navbar-brand .bi {
+  margin-top: 3px; /* Adjust as needed */
+}
+
+.navbar-brand .font-weight-bold {
+  font-weight: bold; /* Ensure the "Dashboard" text is bold */
+}
+
+.nav-link {
+  color: grey;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+/* Logout button */
+.btn-outline-light {
+  color: grey;
+  border-color: grey;
+}
+
+.btn-outline-light:hover {
+  background-color: #26272b;
+  color: white;
+  border-color: white;
+}
+/* Examples wala button */
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4vh;
+    margin-top: 100px;
+    /* background-color: #f8f9fa; Light background color */
+}
+.custom-btn {
+    background-color: #26272b;
+    color: white; /* Change the text color for better visibility */
+    padding: 5px 5px; /* Adjust padding to make the button smaller */
+    font-size:  15px; /* Adjust font size to make the button smaller */
+    border: none; /* Remove the default outline border */
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+.custom-btn:hover {
+    transform: scale(1.1); /* Scale the button size on hover */
+}
+
+.custom-btn i {
+    margin-right: 5px; /* Adjust icon spacing */
+}
+.bi-arrow-right{
+  margin-left: 4px;
+}
+.custom-btn .bi-filetype-py{
+  margin-left: 6px; /* Adjust the value to your preference */
+}
+
+
+/* Create your own stategy wala part */
+.own-strategy {
+  text-align: center;
+  font-size: 1.875rem; /* 3xl */
+  font-weight: bold;
+  line-height: 1.25; /* tight */
+  /* letter-spacing: 0.05em; tighter */
+}
+@media (min-width: 768px) {
+  .own-strategy {
+      font-size: 3rem; /* 5xl */
+  }
+}
+
+@media (min-width: 1024px) {
+  .own-strategy {
+      line-height: 1.1; /* lg:leading-[1.1] */
+  }
+}
+
+
+.horizontal-line {
+    background-color: white;
+    width: 100vw;
+    margin-top: 100px;
+    position: relative; /* Ensure it stretches across the entire viewport */
+    left: 50%; /* Center the line horizontally */
+    transform: translateX(-50%); /* Adjust to center the line */
+}
+
+
+.get-started {
+    text-align: center;
+    font-size: 1.875rem; /* 3xl */
+    font-weight: bold;
+    line-height: 1.25; /* tight */
+    margin-top: 50px;
+    margin-bottom: 15px
+    /* letter-spacing: 0.05em; tighter */
+}
+
+
+/* The main form */
+.form-group {
+    margin-bottom: 15px; /* Optional: Adjust spacing as needed */
+}
+
+/* Style the label */
+.form-group label {
+    color: white; /* White text color */
+    display: block; /* Ensure the label occupies its own line */
+    margin-bottom: 5px; /* Optional: Adjust spacing between label and input */
+}
+
+/* Style the input */
+.form-group input[type="text"], 
+.form-group input[type="email"], 
+.form-group input[type="password"], 
+.form-group textarea {
+    background-color: rgba(0, 0, 0, 0); /* Transparent background */
+    color: white;
+    border: 2px solid #26272b; /* Grey border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 8px; /* Adjust padding as needed */
+    width: 100%; /* Full width */
+    box-sizing: border-box; /* Include padding and border in total width */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
+}
+
+/* Change border color on hover */
+.form-group input[type="text"]:hover, 
+.form-group input[type="email"]:hover, 
+.form-group input[type="password"]:hover, 
+.form-group textarea:hover {
+    border-color: white; /* White border color on hover */
+}
+
+/* Remove default input focus outline */
+.form-group input[type="text"]:focus, 
+.form-group input[type="email"]:focus, 
+.form-group input[type="password"]:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: white; /* White border color on focus */
+}
+
+/* The last two buttons */
+.button-container {
+    text-align: center;
+    gap: 10px; /* Adjust the gap between buttons */
+    margin-bottom: 100px;
+  }
+.button.primary {
+    background-color: white;
+    color: black;
+    padding: auto;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 5px 7px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .button.primary:hover {
+    background-color: lightgrey;
+  }
+
+  .button.secondary {
+    background-color: transparent;
+    color: white;
+    padding: auto;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 5px 7px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border: black
+  }
+
+  .button.secondary:hover {
+    background-color: #26272b;
+    border: black
+  }
+/* Optional: Google Fonts link */
+/* Replace '400' and '700' with other variants as needed */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:wght@400;700&display=swap');
+

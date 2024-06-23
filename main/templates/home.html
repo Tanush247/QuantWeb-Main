@@ -1,12 +1,775 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="dark" >
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
+    <!-- <link rel="stylesheet" href="{% static 'home_style.css' %}" /> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">   
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #333; 
+        }
+        #background-image-container {
+    width: 100%; /* Full width */
+    height: 400px; /* Fixed height */
+    background-image: url("{% static 'banner.jpg' %}"); /* Background image */
+    background-size: cover; /* Cover the entire container */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent image repetition */
+    display: flex; /* Optional: Flexbox to center content */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    color: white; /* Optional: Text color */
+}
+#features_home {
+width: 100%; /* Full width */
+height: 800px; /* Fixed height */
+background-image: url("{% static 'banner.avif' %}"); 
+background-size: cover; /* Cover the entire container */
+background-position: center; /* Center the image */
+background-repeat: no-repeat; /* Prevent image repetition */
+display: flex; /* Optional: Flexbox to center content */
+align-items: center; /* Center content vertically */
+justify-content: center; /* Center content horizontally */
+/* color: white; Optional: Text color} */
+}
+#background-backtesting-container {
+        width: 100%; /* Full width */
+        height: 400px; /* Fixed height */
+        /* background-image: url("{% static 'backtesting.jpg' %}");
+         */
+        background-color: #f3ddf7;
+        background-size: cover; 
+        background-position: center; 
+        background-repeat: no-repeat;
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        /* filter: blur(10px); Adjust the blur radius as needed */
+        /* z-index:  Ensure the pseudo-element is behind the content */
+color: white; }
+        .login-register {
+            background-color: #f4f4f4;
+            color: #212020;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-register h3 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .login-register p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .login-register .action-buttons {
+            margin-top: 10px;
+        }
+
+        .login-register a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #01936c;
+            margin: 0 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-register a:hover {
+            background-color: #015253
+        }
+
+        .login-register a.secondary {
+            background-color: #28abf6;
+        }
+
+        .login-register a.secondary:hover {
+            background-color: #135183;
+        }
+       
+        h2{
+            text-align: center;
+            margin-top: 30px; 
+            color: #333;
+            font-size: 2.0em;
+        }
+
+        
+        .features h2,
+        .team-section h2 {
+            text-align: center;
+            margin-top: 30px;
+            color: #333;
+            font-size: 2.0em;
+        }
+
+    
+        .content,
+        .features ul li p {
+            text-align: justify;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            margin : 20px;
+        }
+
+        .content p {
+            font-size: 20px;
+        }
+        /* .features{ */
+            /* background-image: url("{% static 'background_home.webp'%}"); */
+            /* background-color: #f4f4f4; */
+            /* border-radius: 10px; */
+            /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+            /* padding: 15px;  */
+        /* } */
+
+    
+        .features ul li {
+            margin-bottom: 30px;
+        }
+
+        .features ul li h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .team-section {
+            padding: 50px 0;
+            background-image: url("{% static 'finance1.jpg'%}"); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+        .team-section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        .team-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .team-member {
+            margin: 15px;
+            padding: 20px;
+            background-color: rgba(255, 249, 249, 0.6);
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .team-member:hover {
+            background-color: rgba(214, 6, 241, 0.8);
+            transform: scale(1.05);
+            color: #0c0c0c;
+        }
+        .team-member h4 {
+            margin: 0;
+            color: white;
+        }
+       
+       
+       
+       
+
+       
+       
+       
+       
+       
+
+       
+       
+       
+       
+       
+       
+       
+       
+       
+
+       
+       
+       
+       
+       
+       
+        .custom-btn {
+            font-size: 3rem; /* Adjust font size */
+            padding: 15px 40px; /* Adjust padding */
+            border-radius: 8px; /* Rounded corners */
+            background-color: #92f1f1c4;
+             /* Button background color */
+            color: rgb(23, 22, 22); /* Text color */
+            border: none; /* Remove border */
+            transition: background-color 0.3s ease; /* Smooth hover transition */
+        }
+
+        .custom-btn:hover {
+            background-color: #0056b3; /* Darker color on hover */
+            color: white;
+        }
+        .features {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .features h2 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .features h3 {
+            font-size: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .features p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .feature-card {
+            transition: transform 0.3s;
+        }
+        .feature-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .feature-card h3 {
+            font-size: 1.25rem;
+        }
+        .feature-card p {
+            font-size: 1rem;
+        }
+        .feature-card:hover h3,
+        .feature-card:hover p {
+            color: #007bff;
+        }
+        .navbar.sticky-top {
+    top: -100px;
+    transition: .5s;
+}
+
+.navbar .navbar-nav .nav-link {
+    margin-right: 35px;
+    padding: 25px 0;
+    color: rgb(255, 253, 253);
+    font-size: 18px;
+    font-weight: 500;
+    outline: none;
+}
+
+.navbar .navbar-nav .nav-link:hover,
+.navbar .navbar-nav .nav-link.active {
+    color: greenyellow;
+}
+
+.navbar .dropdown-toggle::after {
+    border: none;
+    content: "\f107";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+@media (max-width: 991.98px) {
+    .navbar .navbar-nav .nav-link  {
+        margin-right: 0;
+        padding: 10px 0;
+    }
+
+    .navbar .navbar-nav {
+        border-top: 1px solid #EEEEEE;
+    }
+}
+
+@media (min-width: 992px) {
+    .navbar .nav-item .dropdown-menu {
+        display: block;
+        border: none;
+        margin-top: 0;
+        top: 150%;
+        opacity: 0;
+        visibility: hidden;
+        transition: .5s;
+    }
+
+    .navbar .nav-item:hover .dropdown-menu {
+        top: 100%;
+        visibility: visible;
+        transition: .5s;
+        opacity: 1;
+
+    }
+}
+/* manually adding */
+.navbar-toggler {
+    background-color: transparent;
+}
+/* this will edit the hambberger menu in the mobile setting *
+.navbar-toggler-icon {
+    background-color: #3d3636;
+    border-radius: 15%;
+}
+
+/*** Header ***/
+.carousel-caption {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, .1);
+    z-index: 1;
+}
+.carousel-control-prev{
+    margin-left: -90px;
+}
+
+.carousel-control-next{
+    margin-right: -70px;
+}
+.carousel-control-prev,
+.carousel-control-next {
+    width: 15%;
+    margin-top: 60px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 3rem;
+    background-color: var(--primary);
+    border: 10px solid var(--primary);
+}
+
+@media (max-width: 768px) {
+    #header-carousel .carousel-item {
+        position: relative;
+        min-height: 450px;
+    }
+    
+    #header-carousel .carousel-item img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+.page-header {
+    background: url() center center no-repeat;
+    background-size: cover;
+}
+
+.page-header .breadcrumb-item+.breadcrumb-item::before {
+    color: var(--light);
+}
+
+.page-header .breadcrumb-item,
+.page-header .breadcrumb-item a {
+    font-size: 18px;
+    color: var(--light);
+}
+}
+
+    </style>
 </head>
 <body>
-    <h2>Home</h2>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top px-4 px-lg-5 py-0 " style="background-color: #0c0c0c; opacity: 90%;">
+        
+        <img class="logo" src="{% static 'logo.png' %}" alt="Image" style="width: 5%;height: 5%;">
+        <!-- <img class="mobile-logo" src="{% static 'logo.png' %}" alt="Image" style="width: 10%;height: 10%;"> -->
+        <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="#home" class="nav-item nav-link ">Home</a>
+                <a href="#backtesting" class="nav-item nav-link">Backtesting Engine </a>
+                <a href="#key_feature" class="nav-item nav-link">Key Features </a>
+                <a href="#team" class="nav-item nav-link">Team</a>
+               
+            </div>
+        </div>
+    </nav>
     
-        <p>You are not logged in. <a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a></p>
+    <div class="container-fluid px-0 mb-5" id="home">
+        <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="w-100" src="{% static 'background_home.webp'%}" alt="Image">
+                    <div class="carousel-caption">
+                        <div class="container">
+                            <div class="row justify-content-start">
+                                <div class="col-lg-8 text-start">
+                                    <h1 class="display-1 text-white mb-5 animated slideInRight" style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; font-size: 80.12px;">QuantWeb</h1>
+                                    <p class="fs-4 text-white" style="font-family: sans-serif;">Accelerate yourselves with our precised Backtesting,create and test your staretgy .</p>
+                                    <br>
+                                        
+                                        
+                                        
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="background-image-container"  style="text-align: center;" >
+        <div class="container" >
+            <a class="custom-btn" href="{% url 'login' %}" role="button">Login</a>
+            <hr class="my-4">
+            <p class="display-6" style="color: #fffefe;">Don't have an account? <a href="{% url 'register' %}" class="text-white">Register here</a></p>
+        </div>
+    </div>
     
+    
+    
+    
+    
+    
+    
+    
+    
+   
+   
+   
+   
+   
+   
+   
+    
+    <!-- Carousel End -->
+    <div class="carousel slide" data-ride="carousel" id="backtesting">
+            <div class="carousel-inner" id="background-backtesting-container">
+            <div class="item active">
+                <div class="container" >
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="center gap fade-down section-heading">
+                                <h2 class="main-title display-3" >Backtesting Engine</h2>
+                                <hr>
+                                <p style="font-size: large; color: #0c0c0c;">
+                                    The platform offers a backtesting engine, comprehensive performance analysis tools, and advanced risk management techniques for developing, testing, and optimizing trading strategies. Backtesting is vital for evaluating the performance of trading strategies using historical market data before live deployment. This process helps in understanding potential risks and rewards, optimizing strategies, and gaining confidence in their viability, enabling informed trading decisions.
+                                </p>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- login page -->
+     <div id="features_home" >
+
+         <div class="container my-5"  id="key_feature" >
+             
+             <h2 style="font-family: serif ; font-size: 80.23px ;text-align: center; color:white;" >Key Features</h2>
+             <div class="features text-center" style="background-color: rgb(192, 244, 227);">
+                 <!-- <img src="{% static 'background_home.webp'%}" alt=""> -->
+                 <div class="row mt-4">
+                     <div class="col-md-6 mb-4">
+                         <div class="card feature-card p-3">
+                             <h3>Advanced Backtesting Engine:</h3>
+                             <p>
+                                 Perform backtesting on equities with your preferred trading strategies and risk management techniques. Evaluate strategy performance using historical market data.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card feature-card p-3">
+                                <h3>CSV Market Data Support</h3>
+                                <p>
+                                    Upload and backtest your strategies using provided CSV market data, enabling analysis on customized and specific market scenarios.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card feature-card p-3">
+                        <h3>Custom Strategy Creation:</h3>
+                        <p>
+                            Create and test your own trading strategies directly on our platform, allowing for tailored strategy development to fit your unique trading objectives.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card feature-card p-3">
+                        <h3>Risk Management:</h3>
+                        <p>
+                            Implement risk management techniques, such as stop-loss orders to effectively measure and control strategy risk.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card feature-card p-3">
+                        <h3>Comprehensive Performance Analysis:</h3>
+                        <p>
+                            Conduct real-time simulations to see how your strategies perform under current market conditions, providing a realistic view of potential outcomes and analyze strategy.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+    
+</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+<div class="team-section">
+    <div class="container">
+        <h2 id="team" style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; font-size: 80.23px;">Team</h2>
+        <div class="team-container">
+            <div class="team-member">
+                <h4>Akshat Garg</h4>
+            </div>
+            <div class="team-member">
+                <h4>Aman Sanwal</h4>
+            </div>
+            <div class="team-member">
+                <h4>Anurag Thakur</h4>
+            </div>
+            <div class="team-member">
+                <h4>Ashwarya Bhandarkar</h4>
+            </div>
+            <div class="team-member">
+                <h4>Atishay Jain</h4>
+            </div>
+            <div class="team-member">
+                <h4>Ayush Omer</h4>
+            </div>
+            <div class="team-member">
+                <h4>Ayush Yadav</h4>
+            </div>
+            <div class="team-member">
+                <h4>Harsh Verma</h4>
+            </div>
+            <div class="team-member">
+                <h4>Harshvardhan Gaur</h4>
+            </div>
+            <div class="team-member">
+                <h4>Jeevesh Narayan</h4>
+            </div>
+            <div class="team-member">
+                <h4>Kaushey</h4>
+            </div>
+            <div class="team-member">
+                <h4>Keshav Bansal</h4>
+            </div>
+            <div class="team-member">
+                <h4>Kethan Challa</h4>
+            </div>
+            <div class="team-member">
+                <h4>Neel D Jadia</h4>
+            </div>
+            <div class="team-member">
+                <h4>Pallav Rastogi</h4>
+            </div>
+            <div class="team-member">
+                <h4>Sanchit Arora</h4>
+            </div>
+            <div class="team-member">
+                <h4>Shantanu Prakash</h4>
+            </div>
+            <div class="team-member">
+                <h4>Uday Meena</h4>
+            </div>
+            <div class="team-member">
+                <h4>Vedhanth Balasubramanian</h4>
+            </div>
+            <div class="team-member">
+                <h4>Vishesh Vishwakarma</h4>
+            </div>
+            <div class="team-member">
+                <h4>Divit Shah</h4>
+            </div>
+            <div class="team-member">
+                <h4>Snehasis Satapathy</h4>
+            </div>
+            <div class="team-member">
+                <h4>Tanush Goel</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>

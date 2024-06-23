@@ -2,65 +2,96 @@
 <html>
 <head>
     <title>Register</title>
+    {% load static %}
     <style>
         body {
-            background-color: #3c8aff; 
             font-family: Arial, sans-serif;
+            background-image: url("{% static 'back.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-blend-mode: overlay;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #ffffff; 
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 400px;
-            height: 41vh;
         }
         h2 {
-            color: #050505; 
-            font-size: 3vh;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
         }
-        .form-group {
+        form {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            backdrop-filter: blur(900px);
+        }
+        form p {
             margin-bottom: 15px;
         }
-        .form-group label {
+        form label {
             display: block;
             margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
         }
-        .form-group input {
+        form input[type="text"],
+        form input[type="password"],
+        form input[type="email"] {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             box-sizing: border-box;
-            text-align: center;
+            transition: border-color 0.3s;
         }
-        .btn {
-            background-color: #007bff;
-            color: #fff;
+        form input[type="text"]:focus,
+        form input[type="password"]:focus,
+        form input[type="email"]:focus {
+            border-color: #0b0b0b;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            background-color: #000000;
+            color: white;
+            padding: 15px 20px;
             border: none;
-            padding: 10px 20px;
+            border-radius: 4px;
             cursor: pointer;
-            border-radius: 5px;
             font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
         }
-        .btn:hover {
-            background-color: #0056b3;
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
         }
-        .errorlist {
-            color: red;
-            list-style-type: none;
-            padding: 0;
+        button:active {
+            background-color: #3e8e41;
+            transform: scale(1);
+        }
+        @media (max-width: 600px) {
+            form {
+                padding: 20px;
+            }
+            button {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
         }
     </style>
-
 </head>
 <body>
-    <h2>Register</h2>
+    
     <form method="post">
+        <h2>Register</h2>
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Register</button>

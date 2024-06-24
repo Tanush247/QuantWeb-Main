@@ -1,13 +1,56 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import CommonModel,UserModel
 from .forms import StrategyForm,csvForm,userstrategy
 import yfinance as yf
+from django.urls import reverse
+from django.http import HttpResponse
 from .backtesting_frameworks import backtest_1,parameters
 from django.contrib.auth.decorators import login_required
 import pandas as pd
 import numpy as np
+@login_required
+def risk_management(request, destination):
+    array = [
+        ['NA',0],
+        ['normal stop loss', 1],
+        ['normal take profit', 2],
+        ['trailing stop loss', 3],
+        ['dynamic exit condition', 4],
+        ['atr based stop loss', 5],
+        ['atr based take profit', 6],
+    ]
 
+    if request.method == 'POST':
+        selected_options = request.POST.getlist('risk_management')
+        bitmask = 0
+        for option in selected_options:
+            bitmask |= (1 << int(option))
+        if(bitmask%2==1 and bitmask!=1):
+            context = {
+                'array': array,
+                'error':"Cannot select NA with any other option",
+            }
+            return render(request, 'app1/risk_management1.html', context)
+       
+        # Determine the destination URL based on the 'destination' parameter
+        if destination == 'backtesting':
+            url_name = 'app1:backtesting'
+        elif destination == 'csv':
+            url_name = 'app1:csv'
+        else:
+            # Handle the case where an invalid destination is provided
+            # You can raise an error, redirect to a default page, etc.
+            raise ValueError('Invalid destination')
 
+        # Generate the URL with the bitmask as a query parameter
+        url = f"{reverse(url_name)}?bitmask={bitmask}"
+        return redirect(url)
+
+    else:
+        context = {
+            'array': array,
+        }
+        return render(request, 'app1/risk_management1.html', context)
 def execute_python_code(code_string, *args, **kwargs):
     # Prepare a dictionary to capture the result and any global variables
     code_globals = {}
@@ -62,6 +105,9 @@ def created(request):
 @login_required
 def csv(request):
     user = request.user
+    bitmask = int(request.GET.get('bitmask', 0))
+    
+    print(2,bitmask)
     error_message=None
     results=None
     if request.method == "POST":
@@ -70,7 +116,38 @@ def csv(request):
             csv_file = request.FILES['csv_file']
             df = pd.read_csv(csv_file, index_col=0, parse_dates=True)
             print(df)
-            stop_loss=form.cleaned_data['stop_loss']
+            normal_stop_loss=0
+            normal_take_profit=0
+            trailing_stop_loss=0
+            dynamic_exit_condition=0
+            atr_take_loss=0
+            atr_take_profit=0
+            if(bitmask & (1<<1) !=0):
+                normal_stop_loss=form.cleaned_data['normal_stop_loss']
+                if(normal_stop_loss==None):
+                    bitmask=bitmask-(1<<1)
+            if(bitmask & (1<<2) !=0):
+                normal_take_profit=form.cleaned_data['normal_take_profit']
+                if(normal_take_profit==None):
+                    bitmask=bitmask-(1<<2)
+            if(bitmask & (1<<3) !=0):
+                trailing_stop_loss=form.cleaned_data['trailing_stop_loss']
+                if(trailing_stop_loss==None):
+                    bitmask=bitmask-(1<<3)
+            if(bitmask & (1<<4) !=0):
+                dynamic_exit_condition=form.cleaned_data['dynamic_exit_condition']
+                if(dynamic_exit_condition==None):
+                    bitmask=bitmask-(1<<4)
+            if(bitmask & (1<<5) !=0):
+                atr_take_loss=form.cleaned_data['atr_stop_loss']
+                if(atr_take_loss==None):
+                    bitmask=bitmask-(1<<5)
+            if(bitmask & (1<<6) !=0):
+                atr_take_profit=form.cleaned_data['atr_take_profit']
+                if(atr_take_profit==None):
+                    bitmask=bitmask-(1<<6)
+            print(3,bitmask)
+            stop_loss=100
             stop_loss=float(stop_loss)
             start_date=df.index[0]
             end_date=df.index[len(df)-1]
@@ -97,8 +174,14 @@ def csv(request):
         'eleven':None,
         'twelve':None,
         'form': form,
-        
         'error_message': error_message,
+        'bitmask': bitmask,
+        'show_normal_stop_loss': bitmask & (1 << 1) != 0,
+        'show_normal_take_profit': bitmask & (1 << 2) != 0,
+        'show_trailing_stop_loss': bitmask & (1 << 3) != 0,
+        'show_dynamic_exit_condition': bitmask & (1 << 4) != 0,
+        'show_atr_take_loss': bitmask & (1 << 5) != 0,
+        'show_atr_take_profit': bitmask & (1 << 6) != 0,
         } 
     else:
 
@@ -116,26 +199,70 @@ def csv(request):
             'eleven':results[10],
             'twelve':results[11],
             'form': form,
-            
             'error_message': error_message,
+            'bitmask': bitmask,
+            'show_normal_stop_loss': bitmask & (1 << 1) != 0,
+            'show_normal_take_profit': bitmask & (1 << 2) != 0,
+            'show_trailing_stop_loss': bitmask & (1 << 3) != 0,
+            'show_dynamic_exit_condition': bitmask & (1 << 4) != 0,
+            'show_atr_take_loss': bitmask & (1 << 5) != 0,
+            'show_atr_take_profit': bitmask & (1 << 6) != 0,
         }
+    
     return render(request, 'app1/csv.html', context)
 
     
 @login_required
 def backtesting(request):
-    user = request.user
+    bitmask = int(request.GET.get('bitmask', 0))
+    print(1,bitmask)
+    user = request.user 
     result = None
     error_message = None
     results=None
     if request.method == "POST":
         form = StrategyForm(request.POST)
         if form.is_valid():
+            
             ticker = form.cleaned_data['ticker']
             strategy = form.cleaned_data['strategy']
             end_date = form.cleaned_data['end_date']
             start_date = form.cleaned_data['start_date']
-            stop_loss=form.cleaned_data['stop_loss']
+            normal_stop_loss=0
+            normal_take_profit=0
+            trailing_stop_loss=0
+            dynamic_exit_condition=0
+            atr_take_loss=0
+            atr_take_profit=0
+            if(bitmask & (1<<1) !=0):
+                normal_stop_loss=form.cleaned_data['normal_stop_loss']
+                if(normal_stop_loss==None):
+                    bitmask=bitmask-(1<<1)
+            if(bitmask & (1<<2) !=0):
+                normal_take_profit=form.cleaned_data['normal_take_profit']
+                if(normal_take_profit==None):
+                    bitmask=bitmask-(1<<2)
+            if(bitmask & (1<<3) !=0):
+                trailing_stop_loss=form.cleaned_data['trailing_stop_loss']
+                if(trailing_stop_loss==None):
+                    bitmask=bitmask-(1<<3)
+            if(bitmask & (1<<4) !=0):
+                dynamic_exit_condition=form.cleaned_data['dynamic_exit_condition']
+                if(dynamic_exit_condition==None):
+                    bitmask=bitmask-(1<<4)
+            if(bitmask & (1<<5) !=0):
+                atr_take_loss=form.cleaned_data['atr_stop_loss']
+                if(atr_take_loss==None):
+                    bitmask=bitmask-(1<<5)
+            if(bitmask & (1<<6) !=0):
+                atr_take_profit=form.cleaned_data['atr_take_profit']
+                if(atr_take_profit==None):
+                    bitmask=bitmask-(1<<6)
+            stop_loss=100.00
+            print(3,bitmask)
+            
+            
+            
             stop_loss=float(stop_loss)
             data = yf.download(ticker, start_date, end_date)
             tnx=yf.download('^TNX',start_date,end_date)
@@ -168,6 +295,7 @@ def backtesting(request):
                     error_message = f"No strategy found with name '{strategy}'"               
                 
     else:
+        
         form = StrategyForm()
     if(results==None):
        context = {
@@ -186,6 +314,14 @@ def backtesting(request):
         'form': form,
         'result': result,
         'error_message': error_message,
+        'bitmask': bitmask,
+        'show_normal_stop_loss': bitmask & (1 << 1) != 0,
+        'show_normal_take_profit': bitmask & (1 << 2) != 0,
+        'show_trailing_stop_loss': bitmask & (1 << 3) != 0,
+        'show_dynamic_exit_condition': bitmask & (1 << 4) != 0,
+        'show_atr_take_loss': bitmask & (1 << 5) != 0,
+        'show_atr_take_profit': bitmask & (1 << 6) != 0,
+        
         } 
     else:
 
@@ -205,6 +341,14 @@ def backtesting(request):
             'form': form,
             'result': result,
             'error_message': error_message,
+            'bitmask': bitmask,
+            'show_normal_stop_loss': bitmask & (1 << 1) != 0,
+            'show_normal_take_profit': bitmask & (1 << 2) != 0,
+            'show_trailing_stop_loss': bitmask & (1 << 3) != 0,
+            'show_dynamic_exit_condition': bitmask & (1 << 4) != 0,
+            'show_atr_take_loss': bitmask & (1 << 5) != 0,
+            'show_atr_take_profit': bitmask & (1 << 6) != 0,
+            
         }
     return render(request, 'app1/result.html', context)
 

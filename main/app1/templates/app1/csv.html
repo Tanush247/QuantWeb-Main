@@ -84,11 +84,51 @@
                     <label for="{{ form.csv_file.id_for_label }}">CSV:</label>
                     {{ form.csv_file }}
                 </div>
-                <div class="form-group">
-                    <label for="{{ form.stop_loss.id_for_label }}">Stop Loss:</label>
-                    {{ form.stop_loss }}
-                </div>
-                
+                {% if show_normal_stop_loss %}
+                  <div class="form-group">
+                      <label for="{{ form.normal_stop_loss.id_for_label }}">Normal Stop Loss:</label>
+                      {{ form.normal_stop_loss }}
+                  </div>
+              {% endif %}
+
+              {% if show_normal_take_profit %}
+                  <div class="form-group">
+                      <label for="{{ form.normal_take_profit.id_for_label }}">Normal Take Profit:</label>
+                      {{ form.normal_take_profit }}
+                  </div>
+              {% endif %}
+
+              {% if show_trailing_stop_loss %}
+                  <div class="form-group">
+                      <label for="{{ form.trailing_stop_loss.id_for_label }}">Trailing Stop Loss:</label>
+                      {{ form.trailing_stop_loss }}
+                  </div>
+              {% endif %}
+
+              {% if show_dynamic_exit_condition %}
+                  <div class="form-group">
+                      <label for="{{ form.dynamic_exit_condition.id_for_label }}">Dynamic Exit Condition:</label>
+                      {{ form.dynamic_exit_condition }}
+                  </div>
+              {% endif %}
+
+              {% if show_atr_take_loss %}
+                  <div class="form-group">
+                      <label for="{{ form.atr_take_loss.id_for_label }}">ATR Based Stop Loss:</label>
+                      {{ form.atr_take_loss }}
+                  </div>
+              {% endif %}
+
+              {% if show_atr_take_profit %}
+                  <div class="form-group">
+                      <label for="{{ form.atr_take_profit.id_for_label }}">ATR Based Take Profit:</label>
+                      {{ form.atr_take_profit }}
+                  </div>
+              {% endif %}
+              <div class="form-group">
+                <label for="{{ form.strategy.id_for_label }}">Strategy:</label>
+                {{ form.strategy }}
+            </div>
             </fieldset>
             <div class="form-group1">
                 <button class="btn btn-outline-info" type="submit">Submit</button>

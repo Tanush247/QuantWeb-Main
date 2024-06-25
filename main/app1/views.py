@@ -116,12 +116,12 @@ def csv(request):
             csv_file = request.FILES['csv_file']
             df = pd.read_csv(csv_file, index_col=0, parse_dates=True)
             print(df)
-            normal_stop_loss=0
-            normal_take_profit=0
-            trailing_stop_loss=0
-            dynamic_exit_condition=0
-            atr_take_loss=0
-            atr_take_profit=0
+            normal_stop_loss=100
+            normal_take_profit=100
+            trailing_stop_loss=100
+            dynamic_exit_condition=100
+            atr_take_loss=100
+            atr_take_profit=100
             if(bitmask & (1<<1) !=0):
                 normal_stop_loss=form.cleaned_data['normal_stop_loss']
                 if(normal_stop_loss==None):
@@ -228,12 +228,12 @@ def backtesting(request):
             strategy = form.cleaned_data['strategy']
             end_date = form.cleaned_data['end_date']
             start_date = form.cleaned_data['start_date']
-            normal_stop_loss=0
-            normal_take_profit=0
-            trailing_stop_loss=0
-            dynamic_exit_condition=0
-            atr_take_loss=0
-            atr_take_profit=0
+            normal_stop_loss=100
+            normal_take_profit=100
+            trailing_stop_loss=100
+            dynamic_exit_condition=100
+            atr_take_loss=100
+            atr_take_profit=100
             if(bitmask & (1<<1) !=0):
                 normal_stop_loss=form.cleaned_data['normal_stop_loss']
                 if(normal_stop_loss==None):

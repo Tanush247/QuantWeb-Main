@@ -23,7 +23,7 @@ To clone this repository to your local machine and set up the project, follow th
 
    ```bash
    pip install django
-   pip install crispy-bootstrap4 django-crispy-forms yfinance numpy pandas
+   pip install crispy-bootstrap4 django-crispy-forms yfinance numpy pandas plotly
    ```
 4. Run the Server
 

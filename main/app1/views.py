@@ -363,5 +363,4 @@ def backtesting(request):
             
         }
     return render(request, 'app1/result.html', context)
-
-
+    

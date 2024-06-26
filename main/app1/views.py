@@ -116,35 +116,41 @@ def csv(request):
             csv_file = request.FILES['csv_file']
             df = pd.read_csv(csv_file, index_col=0, parse_dates=True)
             print(df)
-            normal_stop_loss=0
-            normal_take_profit=0
-            trailing_stop_loss=0
-            dynamic_exit_condition=0
-            atr_take_loss=0
-            atr_take_profit=0
+            normal_stop_loss=100
+            normal_take_profit=100
+            trailing_stop_loss=100
+            dynamic_exit_condition=100
+            atr_take_loss=100
+            atr_take_profit=100
             if(bitmask & (1<<1) !=0):
                 normal_stop_loss=form.cleaned_data['normal_stop_loss']
                 if(normal_stop_loss==None):
+                    normal_stop_loss=100
                     bitmask=bitmask-(1<<1)
             if(bitmask & (1<<2) !=0):
                 normal_take_profit=form.cleaned_data['normal_take_profit']
                 if(normal_take_profit==None):
+                    normal_take_profit=100
                     bitmask=bitmask-(1<<2)
             if(bitmask & (1<<3) !=0):
                 trailing_stop_loss=form.cleaned_data['trailing_stop_loss']
                 if(trailing_stop_loss==None):
+                    trailing_stop_loss=100
                     bitmask=bitmask-(1<<3)
             if(bitmask & (1<<4) !=0):
                 dynamic_exit_condition=form.cleaned_data['dynamic_exit_condition']
                 if(dynamic_exit_condition==None):
+                    dynamic_exit_condition=100
                     bitmask=bitmask-(1<<4)
             if(bitmask & (1<<5) !=0):
                 atr_take_loss=form.cleaned_data['atr_stop_loss']
                 if(atr_take_loss==None):
+                    atr_take_loss=100
                     bitmask=bitmask-(1<<5)
             if(bitmask & (1<<6) !=0):
                 atr_take_profit=form.cleaned_data['atr_take_profit']
                 if(atr_take_profit==None):
+                    atr_take_profit=100
                     bitmask=bitmask-(1<<6)
             print(3,bitmask)
             stop_loss=100
@@ -228,35 +234,41 @@ def backtesting(request):
             strategy = form.cleaned_data['strategy']
             end_date = form.cleaned_data['end_date']
             start_date = form.cleaned_data['start_date']
-            normal_stop_loss=0
-            normal_take_profit=0
-            trailing_stop_loss=0
-            dynamic_exit_condition=0
-            atr_take_loss=0
-            atr_take_profit=0
+            normal_stop_loss=100
+            normal_take_profit=100
+            trailing_stop_loss=100
+            dynamic_exit_condition=100
+            atr_take_loss=100
+            atr_take_profit=100
             if(bitmask & (1<<1) !=0):
                 normal_stop_loss=form.cleaned_data['normal_stop_loss']
                 if(normal_stop_loss==None):
+                    normal_stop_loss=100
                     bitmask=bitmask-(1<<1)
             if(bitmask & (1<<2) !=0):
                 normal_take_profit=form.cleaned_data['normal_take_profit']
                 if(normal_take_profit==None):
+                    normal_take_profit=100
                     bitmask=bitmask-(1<<2)
             if(bitmask & (1<<3) !=0):
                 trailing_stop_loss=form.cleaned_data['trailing_stop_loss']
                 if(trailing_stop_loss==None):
+                    trailing_stop_loss=100
                     bitmask=bitmask-(1<<3)
             if(bitmask & (1<<4) !=0):
                 dynamic_exit_condition=form.cleaned_data['dynamic_exit_condition']
                 if(dynamic_exit_condition==None):
+                    dynamic_exit_condition=100
                     bitmask=bitmask-(1<<4)
             if(bitmask & (1<<5) !=0):
                 atr_take_loss=form.cleaned_data['atr_stop_loss']
                 if(atr_take_loss==None):
+                    atr_take_loss=100
                     bitmask=bitmask-(1<<5)
             if(bitmask & (1<<6) !=0):
                 atr_take_profit=form.cleaned_data['atr_take_profit']
                 if(atr_take_profit==None):
+                    atr_take_profit=100
                     bitmask=bitmask-(1<<6)
             stop_loss=100.00
             print(3,bitmask)

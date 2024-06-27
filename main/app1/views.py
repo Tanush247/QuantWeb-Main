@@ -4,7 +4,7 @@ from .forms import StrategyForm,csvForm,userstrategy
 import yfinance as yf
 from django.urls import reverse
 from django.http import HttpResponse
-from .backtesting_frameworks import backtest_1,parameters
+from .backtesting_frameworks import trader
 from django.contrib.auth.decorators import login_required
 import pandas as pd
 import numpy as np
@@ -115,52 +115,52 @@ def csv(request):
         if form.is_valid():
             csv_file = request.FILES['csv_file']
             df = pd.read_csv(csv_file, index_col=0, parse_dates=True)
-            print(df)
-            normal_stop_loss=100
-            normal_take_profit=100
-            trailing_stop_loss=100
-            dynamic_exit_condition=100
-            atr_take_loss=100
-            atr_take_profit=100
+            stock=trader(df)
+
             if(bitmask & (1<<1) !=0):
-                normal_stop_loss=form.cleaned_data['normal_stop_loss']
+                stock.normal_stoploss=form.cleaned_data['normal_stop_loss']
                 if(normal_stop_loss==None):
                     normal_stop_loss=100
                     bitmask=bitmask-(1<<1)
+                else:
+                    stock.ynnormal_stoploss=1
+
             if(bitmask & (1<<2) !=0):
-                normal_take_profit=form.cleaned_data['normal_take_profit']
+                stock.normal_takeprofit=form.cleaned_data['normal_take_profit']
                 if(normal_take_profit==None):
                     normal_take_profit=100
                     bitmask=bitmask-(1<<2)
+                else:
+                    stock.ynnormal_takeprofit=1
             if(bitmask & (1<<3) !=0):
-                trailing_stop_loss=form.cleaned_data['trailing_stop_loss']
+                stock.traling_stoploss=form.cleaned_data['trailing_stop_loss']
                 if(trailing_stop_loss==None):
                     trailing_stop_loss=100
                     bitmask=bitmask-(1<<3)
+                else:
+                    stock.yntraling_stoploss=1
             if(bitmask & (1<<4) !=0):
-                dynamic_exit_condition=form.cleaned_data['dynamic_exit_condition']
+                stock.dynamic_exitcondition=form.cleaned_data['dynamic_exit_condition']
                 if(dynamic_exit_condition==None):
                     dynamic_exit_condition=100
                     bitmask=bitmask-(1<<4)
+                else:
+                    stock.yndynamic_exitcondition=1
             if(bitmask & (1<<5) !=0):
-                atr_take_loss=form.cleaned_data['atr_stop_loss']
+                stock.atr_stoploss=form.cleaned_data['atr_stop_loss']
                 if(atr_take_loss==None):
                     atr_take_loss=100
                     bitmask=bitmask-(1<<5)
+                else:
+                    stock.ynatr_stoploss=1
             if(bitmask & (1<<6) !=0):
-                atr_take_profit=form.cleaned_data['atr_take_profit']
+                stock.atr_takeprofit=form.cleaned_data['atr_take_profit']
                 if(atr_take_profit==None):
                     atr_take_profit=100
                     bitmask=bitmask-(1<<6)
-            print(3,bitmask)
-            stop_loss=100
-            stop_loss=float(stop_loss)
-            start_date=df.index[0]
-            end_date=df.index[len(df)-1]
-            # Save the CSV file to the database
-            tnx=yf.download('^TNX',start_date,end_date)
-            a,capital=backtest_1(df,stop_loss)
-            results=parameters(df,a,tnx)
+                else:
+                    stock.ynatr_takeprofit
+            results=stock.backtest()
         else:
             error_message = f"Backtesting failed"
     else:
@@ -234,49 +234,55 @@ def backtesting(request):
             strategy = form.cleaned_data['strategy']
             end_date = form.cleaned_data['end_date']
             start_date = form.cleaned_data['start_date']
-            normal_stop_loss=100
-            normal_take_profit=100
-            trailing_stop_loss=100
-            dynamic_exit_condition=100
-            atr_take_loss=100
-            atr_take_profit=100
+            df = yf.download(ticker, start_date, end_date)
+            stock=trader(df)
             if(bitmask & (1<<1) !=0):
-                normal_stop_loss=form.cleaned_data['normal_stop_loss']
+                stock.normal_stoploss=form.cleaned_data['normal_stop_loss']
                 if(normal_stop_loss==None):
                     normal_stop_loss=100
                     bitmask=bitmask-(1<<1)
+                else:
+                    stock.ynnormal_stoploss=1
+
             if(bitmask & (1<<2) !=0):
-                normal_take_profit=form.cleaned_data['normal_take_profit']
+                stock.normal_takeprofit=form.cleaned_data['normal_take_profit']
                 if(normal_take_profit==None):
                     normal_take_profit=100
                     bitmask=bitmask-(1<<2)
+                else:
+                    stock.ynnormal_takeprofit=1
             if(bitmask & (1<<3) !=0):
-                trailing_stop_loss=form.cleaned_data['trailing_stop_loss']
+                stock.traling_stoploss=form.cleaned_data['trailing_stop_loss']
                 if(trailing_stop_loss==None):
                     trailing_stop_loss=100
                     bitmask=bitmask-(1<<3)
+                else:
+                    stock.yntraling_stoploss=1
             if(bitmask & (1<<4) !=0):
-                dynamic_exit_condition=form.cleaned_data['dynamic_exit_condition']
+                stock.dynamic_exitcondition=form.cleaned_data['dynamic_exit_condition']
                 if(dynamic_exit_condition==None):
                     dynamic_exit_condition=100
                     bitmask=bitmask-(1<<4)
+                else:
+                    stock.yndynamic_exitcondition=1
             if(bitmask & (1<<5) !=0):
-                atr_take_loss=form.cleaned_data['atr_stop_loss']
+                stock.atr_stoploss=form.cleaned_data['atr_stop_loss']
                 if(atr_take_loss==None):
                     atr_take_loss=100
                     bitmask=bitmask-(1<<5)
+                else:
+                    stock.ynatr_stoploss=1
             if(bitmask & (1<<6) !=0):
-                atr_take_profit=form.cleaned_data['atr_take_profit']
+                stock.atr_takeprofit=form.cleaned_data['atr_take_profit']
                 if(atr_take_profit==None):
                     atr_take_profit=100
                     bitmask=bitmask-(1<<6)
-            stop_loss=100.00
-            print(3,bitmask)
-            
-            
+                else:
+                    stock.ynatr_takeprofit
+
+ 
             
             stop_loss=float(stop_loss)
-            data = yf.download(ticker, start_date, end_date)
             tnx=yf.download('^TNX',start_date,end_date)
             # Query CommonModel based on the strategy name
             object1 = CommonModel.objects.filter(name=strategy).first()
@@ -288,8 +294,7 @@ def backtesting(request):
                 
                 # Execute the Python code (assuming 'hello' function exists)
                 data, error_message = execute_python_code(python_code_string,data)
-                a,capital=backtest_1(data,stop_loss)
-                results=parameters(data,a,tnx)
+                results=stock.backtest()
                 
                 
 
@@ -301,8 +306,7 @@ def backtesting(request):
                     
                     # Execute the Python code (assuming 'hello' function exists)
                     data, error_message = execute_python_code(python_code_string,data)
-                    a,capital=backtest_1(data,stop_loss)
-                    results=parameters(data,a,tnx)
+                    results=stock.backtest()
                 else:
                     error_message = f"No strategy found with name '{strategy}'"               
                 
@@ -365,7 +369,3 @@ def backtesting(request):
     return render(request, 'app1/result.html', context)
 
 
-@login_required
-def contact(request):
-    return render(request, 'app1/contact.html')
-    

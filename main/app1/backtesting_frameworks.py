@@ -1,197 +1,205 @@
 import pandas as pd
 import numpy as np
-def backtest_1(data,stop_loss_percent=0.1):
-    current=0 #what position you are having
-    capital=1000000
-    entry=[]
-    exit=[]
-    number_of_stock=0
-    type_of_trade=[]
-    duration=[]
-    win=0
-    stop_loss=0
-    loss=0
-    count_stop_loss=0
-    current_maxima=0
-    portfolio_value=[] #total capital-> non investment+ investment
-    pl=[] # profit and loss
-    for i in range(len(data)-1):
-        if(current==1):
-            if(data.signals[i]==1 or data.signals[i]==0):
-#                 print("Hello")
-                capital=capital+(number_of_stock*data.Close[i])
-                portfolio_value.append(capital)
-                if(capital<=stop_loss):
-                    count_stop_loss=count_stop_loss+1
-                    exit.append(i)
-                    current=0
-                    duration.append(exit[-1]-entry[-1])
-                    x=portfolio_value[exit[-1]]-portfolio_value[entry[-1]]
-                    pl.append(x)
-                    number_of_stock=0
-                    if(x>0):
-                        win=win+1
-                    elif(x<0):
-                        loss=loss+1
-                elif(capital>current_maxima):
-                    current_maxima=capital
-                    stop_loss=(1-stop_loss_percent)*current_maxima
-                capital=capital-number_of_stock*data.Close[i]
-            elif(data.signals[i]==-1):
-                capital=capital+(number_of_stock*data.Close[i])
-                portfolio_value.append(capital)
-                exit.append(i)
-                current=0
-                duration.append(exit[-1]-entry[-1])
-                x=portfolio_value[exit[-1]]-portfolio_value[entry[-1]]
-                pl.append(x)
-                if(x>0):
-                    win=win+1
-                elif(x<0):
-                    loss=loss+1
-                
-                
-        elif(current==-1):
-            if(data.signals[i]==-1 or data.signals[i]==0):
-                capital=capital-(number_of_stock*data.Close[i])
-                portfolio_value.append(capital)
-                if(capital<=stop_loss):
-                    count_stop_loss=count_stop_loss+1
-                    exit.append(i)
-                    current=0
-                    duration.append(exit[-1]-entry[-1])
-                    x=portfolio_value[exit[-1]]-portfolio_value[entry[-1]]
-                    pl.append(x)
-                    number_of_stock=0
-                    if(x>0):
-                        win=win+1
-                    elif(x<0):
-                        loss=loss+1
-                elif(capital>current_maxima):
-                    current_maxima=capital
-                    stop_loss=(1-stop_loss_percent)*current_maxima
-                capital=capital+number_of_stock*data.Close[i]
-                
-            elif(data.signals[i]==1):
-                capital=capital-(number_of_stock*data.Close[i])
-                portfolio_value.append(capital)
-                exit.append(i)
-                current=0
-                duration.append(exit[-1]-entry[-1])
-                x=portfolio_value[exit[-1]]-portfolio_value[entry[-1]]
-                pl.append(x)
-                if(x>0):
-                    win=win+1
-                elif(x<0):
-                    loss=loss+1
-            
-        else:
-            if(data.signals[i]==1):
-#                 print("Hello")
-                current=1
-                stop_loss=(1-stop_loss_percent)*capital
-                current_maxima=capital
-                number_of_stock=int(capital/data.Close[i])
-                portfolio_value.append(capital)
-                capital=capital-number_of_stock*data.Close[i]
-                entry.append(i)
-                type_of_trade.append("long")
-            elif(data.signals[i]==-1):
-                current=-1
-                stop_loss=(1-stop_loss_percent)*capital
-                number_of_stock=int(capital/data.Close[i])
-                portfolio_value.append(capital)
-                capital=capital+number_of_stock*data.Close[i]
-                entry.append(i)
-                type_of_trade.append("short")
-            else:
-                portfolio_value.append(capital)
-    if(current==1):
-        capital=capital+(number_of_stock*data.Close[i])
-        portfolio_value.append(capital)
-        exit.append(i)
-        current=0
-        duration.append(exit[-1]-entry[-1])
-        x=portfolio_value[exit[-1]]-portfolio_value[entry[-1]]
-        pl.append(x)
-        if(x>0):
-            win=win+1
-        elif(x<0):
-            loss=loss+1
-    elif(current==-1):
-        capital=capital-(number_of_stock*data.Close[i])
-        portfolio_value.append(capital)
-        exit.append(i)
-        current=0
-        duration.append(exit[-1]-entry[-1])
-        x=portfolio_value[exit[-1]]-portfolio_value[entry[-1]]
-        pl.append(x)
-        if(x>0):
-            win=win+1
-        elif(x<0):
-            loss=loss+1
-        
+class trader:
+
+  def __init__(self,df):
+
+    self.size=len(df)
+
+    self.ynnormal_stoploss=0
+    self.ynnormal_takeprofit=0
+    self.yndynamic_exitcondition=0
+    self.yntraling_stoploss=0
+    self.ynatr_stoploss=0
+    self.ynatr_takeprofit=0
+
+    self.normal_stoploss=0
+    self.normal_takeprofit=0
+    self.dynamic_exitcondition=0
+    self.traling_stoploss=0
+    self.atr_stoploss=0
+    self.atr_takeprofit=0
+
+
+    self.price=df['Close']
+    self.close=df['Close']
+    self.high=df['High']
+    self.low=df['Low']
+    self.open=df['Open']
+    self.pfvalue=df['Open']
+    self.maxvalue=0
+    self.minvalue=0
+
+
+    self.signals=df['signals']
+    self.trade_wise_returns=[]
+    self.entry=[]
+    self.exit=[]
+    self.dip=[]
+    self.drawdown=[]
+    self.trade_type=[]
+    self.dailyreturn=[]
+    self.amount=100000
+    self.no_ofshare=0
+    self.position=0 #Taking not in any position in the start of the trade
+
+
+    self.calculate_atr(14)
+
+
+  def calculate_atr(self, period=14):
+      # Calculate True Range (TR)
+      tr = [max(self.high[i] - self.low[i], abs(self.high[i] - self.close[i - 1]), abs(self.low[i] - self.close[i - 1])) for i in range(1, len(self.close))]
+
+      # Calculate ATR
+      atr = [sum(tr[:period]) / period]  # Initial ATR value
+      for i in range(period, len(tr)):
+          atr.append((atr[-1] * (period - 1) + tr[i]) / period)
+      self.atr = atr
+
+
+
+  def enter_longtrade(self,i):
+    self.entry.append(i)
+    self.trade_type.append('1')
+    self.position=1
+    self.no_ofshare=self.amount//self.price[i]
+    self.amount=self.amount%self.price[i]
+    self.maxvalue=self.pfvalue[i]
+    self.minvalue=self.pfvalue[i]
+
+  def enter_shorttrade(self,i):
+    self.entry.append(i)
+    self.position=-1
+    self.no_ofshare=self.amount//self.price[i]
+    self.amount+=self.price[i]*self.no_ofshare
+    self.maxvalue=self.pfvalue[i]
+    self.minvalue=self.pfvalue[i]
+
+
+  def exit_longtrade(self,i):
+    self.exit.append(i)
+    self.position=0
+    self.amount+=self.no_ofshare*self.price[i]
+
+  def exit_shorttrade(self,i):
+    self.exit.append(i)
+    self.position=0
+    self.amount-=self.no_ofshare*self.price[i]
+
+  def exittrade(self,i):
+    if(self.position==1):
+      self.exit_longtrade(i)
     else:
-        portfolio_value.append(capital)
-        
-        
-    a=pd.DataFrame(columns=['entry'])
-    a['entry']=entry
-    a['exit']=exit
-    a['duration']=duration
-    a['P and L']=pl
-    a['type']=type_of_trade
-    data['portfolio value']=portfolio_value
-    # print("Stop loss hit: ",count_stop_loss)
-    return a,capital
+      self.exit_shorttrade(i)
 
-import numpy as np
+  def checkexitcondition(self,i):
 
-def parameters(data, trade, tnx,capital_initial=1000000):
-    # print("RETURNS (in %):", (trade['P and L'].sum() / capital_initial) * 100)
-    
-    temp = capital_initial
-    number_of_stock = int(temp / data.Close[0])
-    final_value = capital_initial - number_of_stock * (data.Close[0] - data.Close.iloc[-1])
-    
-    drawdown = []
-    dip = []
-    returns_for_sharpe=[]
-    
-    for i in range(len(trade)):
-        entry_index = trade['entry'][i]
-        exit_index = trade['exit'][i]
-        
-        initial_value = data['portfolio value'][entry_index]
-        min_value = min(data['portfolio value'][entry_index:exit_index + 1])
-        dip.append(100 * (initial_value - min_value) / initial_value)
-        
-        returns_for_sharpe.append((100*trade['P and L']/(initial_value)-(tnx['Close'].iloc[exit_index])/(np.sqrt(252))))
-        
-        max_drawdown = 0
-        temp1 = initial_value
-        
-        for j in range(entry_index + 1, exit_index + 1):
-            temp1 = max(temp1, data['portfolio value'][j])
-            drawdown_value = (temp1 - data['portfolio value'][j]) / temp1
-            max_drawdown = max(max_drawdown, drawdown_value)
-        
-        drawdown.append(max_drawdown)
-    
-    trade['drawdown'] = drawdown 
-    trade['dip'] = dip
-    
-    # print("Benchmark Return (in rupees):", final_value - capital_initial)
-    # print("Number of closed trades:", len(trade))
-    # print("Max holding time:", np.max(trade['duration']))
-    # print("Avg Holding time:", np.mean(trade['duration']))
-    # print("Gross Profit:", trade['P and L'].sum())
-    # print("Net Profit:", trade['P and L'].sum() - 20 * len(trade))
-    # print("Max drawdown (in %):", 100 * np.max(trade['drawdown']))
-    # print("Avg drawdown (in %):", 100 * np.mean(trade['drawdown']))
-    # print("Max dip (in %):", np.max(trade['dip']))
-    # print("Avg dip (in %):", np.mean(trade['dip']))
-    # print("Sharpe Ratio: ",np.sqrt(252)*(np.mean(returns_for_sharpe)/(np.std(returns_for_sharpe))))
+    self.enterindex=self.entry[-1]
 
-    return (trade['P and L'].sum() / capital_initial) * 100, final_value - capital_initial, len(trade), np.max(trade['duration']),np.mean(trade['duration']),trade['P and L'].sum(),trade['P and L'].sum() - 20 * len(trade),100 * np.max(trade['drawdown']),100 * np.mean(trade['drawdown']), np.max(trade['dip']),np.mean(trade['dip']),np.sqrt(252)*(np.mean(returns_for_sharpe)/(np.std(returns_for_sharpe)))
-        
+    if(self.position==-1 and self.signals[i]==1):
+      self.exit_shorttrade(i)
+    elif(self.position==1 and self.signals[i]==-1):
+      self.exit_longtrade(i)
+
+    if(self.ynnormal_stoploss==1 and self.pfvalue[i]<self.pfvalue[self.enterindex]*(1-self.normal_stoploss)):
+      self.exittrade(i)
+
+    elif(self.ynnormal_takeprofit==1 and self.pfvalue[i]>self.pfvalue[self.enterindex]*(1+self.normal_takeprofit)):
+      self.exittrade(i)
+
+    elif(((self.ynatr_stoploss==1 and self.position==1 ) or (self.ynatr_takeprofit==1 and self.position==-1)) and self.close[i]<self.close[self.enterindex]-self.atr_stoploss*self.atr[i]):
+      self.exittrade(i)
+
+    elif(((self.ynatr_stoploss==1 and self.position==-1 ) or (self.ynatr_takeprofit==1 and self.position==1)) and self.close[i]>self.close[self.enterindex]+self.atr_stoploss*self.atr[i]):
+      self.exittrade(i)
+
+    elif(self.yntraling_stoploss==1 and self.pfvalue[i]<self.maxvalue*(1-self.traling_stoploss)):
+      self.exittrade(i)
+
+    elif(self.yndynamic_exitcondition==1 and self.pfvalue[i]>self.minvalue*(1+self.dynamic_exitcondition)):
+      self.exittrade(i)
+
+
+  def entercheck(self,i):
+    if(self.position==0):
+      if(self.signals[i]==1):
+        self.enter_longtrade(i)
+        return 1
+      if(self.signals[i]==-1):
+        self.enter_shorttrade(i)
+        return 1
+    return 0
+
+  def update(self,i):
+    if(self.position==1):
+      self.pfvalue[i]=self.amount+self.no_ofshare*self.price[i]
+    elif(self.position==-1):
+      self.pfvalue[i]=self.amount-self.no_ofshare*self.price[i]
+    else :
+      self.pfvalue[i]=self.amount
+
+    if(self.pfvalue[i]>self.maxvalue):
+      self.maxvalue=self.pfvalue[i]
+
+    if(self.pfvalue[i]<self.minvalue):
+      self.minvalue=self.pfvalue[i]
+
+    self.dailyreturn.append((self.pfvalue[i]-self.pfvalue[i-1])/self.pfvalue[i-1])
+
+
+
+
+
+  def compounding(self):
+    for i in range(self.size):
+
+      self.update(i)
+
+      if(self.entercheck(i)):
+        continue
+      self.checkexitcondition(i)
+
+    if self.position!=0:
+      self.exittrade(i)
+
+  def calculate_drawdown(self):
+    for j in range(len(self.entry)):
+      self.dmaxp=0
+      self.drawdown.append(0)
+      self.dip.append(0)
+
+      for i in range(self.entry[j],self.exit[j]):
+
+        if(self.pfvalue[i]>self.dmaxp):
+          self.dmaxp=self.pfvalue[i]
+
+        if(self.drawdown[-1]>(self.dmaxp-self.pfvalue[i])/self.pfvalue[i]):
+          self.drawdown[-1]=(self.dmaxp-self.pfvalue[i])/self.pfvalue[i]
+
+        if(self.dip[-1]>(self.pfvalue[self.entry[j]]-self.pfvalue[i])/self.pfvalue[i]):
+          self.drawdown[-1]=(self.pfvalue[self.entry[j]]-self.pfvalue[i])/self.pfvalue[i]
+
+  def calculatesharpe(self):
+    self.riskfree=np.array(self.dailyreturn)-0.003
+    self.sharpe=self.riskfree.mean()*(252**0.5)/self.riskfree.std()
+
+
+  def backtest(self):
+    self.compounding()
+    self.holdingtime=(np.array(self.entry)-np.array(self.exit))
+    self.maxtime=np.max(self.holdingtime)
+    self.meantime=np.mean(self.holdingtime)
+    self.gross=(self.amount-100000)
+    self.net=self.gross-20*len(self.entry)
+    self.calculate_drawdown()
+    self.maxdraw=np.max(np.array(self.drawdown))
+    self.avgdraw=np.mean(np.array(self.drawdown))
+    self.maxdip=np.max(np.array(self.dip))
+    self.avgdip=np.mean(np.array(self.dip))
+    self.calculatesharpe()
+    self.benchmark=(self.price[len(self.price)-1]-self.price[0])*100/self.price[0]
+    self.returns=(self.amount-100000)/1000
+    self.nooftrades=len(self.entry)
+
+    return self.returns,self.benchmark,self.nooftrades,self.maxtime,self.meantime,self.gross,self.net,self.maxdraw,self.avgdraw,self.maxdip,self.avgdip,self.sharpe

@@ -159,8 +159,8 @@ def csv(request):
             end_date=df.index[len(df)-1]
             # Save the CSV file to the database
             tnx=yf.download('^TNX',start_date,end_date)
-            a,capital=backtest_1(df,stop_loss)
-            results=parameters(df,a,tnx)
+            obj=Bactesting_Framework(data,tnx,normal_stop_loss,normal_take_profit,trailing_stop_loss,dynamic_exit_condition,atr_take_loss,atr_take_profit)
+            results=obj.parameters()
         else:
             error_message = f"Backtesting failed"
     else:
@@ -288,8 +288,8 @@ def backtesting(request):
                 
                 # Execute the Python code (assuming 'hello' function exists)
                 data, error_message = execute_python_code(python_code_string,data)
-                a,capital=backtest_1(data,stop_loss)
-                results=parameters(data,a,tnx)
+                obj=Bactesting_Framework(data,tnx,normal_stop_loss,normal_take_profit,trailing_stop_loss,dynamic_exit_condition,atr_take_loss,atr_take_profit)
+                results=obj.parameters()
                 
                 
 
@@ -301,8 +301,8 @@ def backtesting(request):
                     
                     # Execute the Python code (assuming 'hello' function exists)
                     data, error_message = execute_python_code(python_code_string,data)
-                    a,capital=backtest_1(data,stop_loss)
-                    results=parameters(data,a,tnx)
+                    obj=Bactesting_Framework(data,tnx,normal_stop_loss,normal_take_profit,trailing_stop_loss,dynamic_exit_condition,atr_take_loss,atr_take_profit)
+                    results=obj.parameters()
                 else:
                     error_message = f"No strategy found with name '{strategy}'"               
                 

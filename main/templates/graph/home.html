@@ -1,0 +1,63 @@
+<!-- graph/templates/graph/plot.html -->
+{% extends "graph/base.html" %}
+{% load static %}
+
+{% block content %}
+    <style>
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 10px;
+        }
+        .form-label {
+            color: rgb(0, 0, 0);
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: left;
+            margin-right: 30px;
+            flex: 1;
+        }
+        .form-input {
+            text-align: right;
+            flex: 2;
+        }
+    </style>
+    <div class="form-container">
+        <br><br><br><br>
+        <h1 style="color: black; font-size: 2em; align-items: center;">Graph Of Stock Closing Prices</h1>
+        <br><br>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label" for="{{ form.input_string.id_for_label }}">Ticker</label>
+                <div class="form-input">{{ form.input_string }}</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="{{ form.start_date.id_for_label }}">Start Date</label>
+                <div class="form-input">{{ form.start_date }}</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="{{ form.end_date.id_for_label }}">End Date</label>
+                <div class="form-input">{{ form.end_date }}</div>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        
+        {% if graph_html %}
+            <div style="margin-top: 20px; width: 100%; max-width: 800px;">
+                {{ graph_html|safe }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

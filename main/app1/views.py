@@ -397,3 +397,7 @@ def backtesting(request):
     return render(request, 'app1/result.html', context)
 
 
+@login_required
+def contact(request):
+    return render(request, 'app1/contact.html')
+    

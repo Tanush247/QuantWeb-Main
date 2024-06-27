@@ -109,14 +109,14 @@
 
               {% if show_atr_take_loss %}
                   <div class="form-group">
-                      <label for="{{ form.atr_take_loss.id_for_label }}">ATR Based Stop Loss:</label>
+                      <label for="{{ form.atr_take_loss.id_for_label }}">ATR Based Stop Loss Multiplier:</label>
                       {{ form.atr_stop_loss }}
                   </div>
               {% endif %}
 
               {% if show_atr_take_profit %}
                   <div class="form-group">
-                      <label for="{{ form.atr_take_profit.id_for_label }}">ATR Based Take Profit:</label>
+                      <label for="{{ form.atr_take_profit.id_for_label }}">ATR Based Take Profit Multiplier:</label>
                       {{ form.atr_take_profit }}
                   </div>
               {% endif %}
@@ -146,6 +146,12 @@
               <li class="list-group-item">Max dip (in %): {{ ten }}</li>
               <li class="list-group-item">Avg dip (in %): {{ eleven }}</li>
               <li class="list-group-item">Sharpe Ratio: {{ twelve }}</li>
+              <li class="list-group-item">Normal_Stop_Loss_Count: {{ thirteen }}</li>
+              <li class="list-group-item">Normal_Take_Profit_Count: {{ fourteen }}</li>
+              <li class="list-group-item">Trailing_Stop_Loss_Count: {{ fifteen }}</li>
+              <li class="list-group-item">Trailing_Take_Profit_Count: {{ sixteen }}</li>
+              <li class="list-group-item">ATR_Stop_Loss_Count: {{ seventeen }}</li>
+              <li class="list-group-item">ATR_Take_Profit_Count: {{ eighteen }}</li>
           </ul>
       </div> 
 

@@ -4,7 +4,7 @@ from .forms import StrategyForm,csvForm,userstrategy
 import yfinance as yf
 from django.urls import reverse
 from django.http import HttpResponse
-from .backtesting_frameworks import backtest_1,parameters
+from .backtesting_frameworks import TradingStrategy_compounding
 from django.contrib.auth.decorators import login_required
 import pandas as pd
 import numpy as np
@@ -159,8 +159,11 @@ def csv(request):
             end_date=df.index[len(df)-1]
             # Save the CSV file to the database
             tnx=yf.download('^TNX',start_date,end_date)
-            a,capital=backtest_1(df,stop_loss)
-            results=parameters(df,a,tnx)
+            # a,capital=backtest_1(df,stop_loss)
+            # results=parameters(df,a,tnx)
+            
+            Testing_signals = TradingStrategy_compounding(df, normal_stop_loss, normal_take_profit, trailing_stop_loss, dynamic_exit_condition, atr_take_loss, atr_take_profit)
+            to_submit, trade_wise, every_day ,results= Testing_signals.compounding()
         else:
             error_message = f"Backtesting failed"
     else:
@@ -179,6 +182,12 @@ def csv(request):
         'ten':None,
         'eleven':None,
         'twelve':None,
+        'thirteen':None,
+        'fourteen':None,
+        'fifteen':None,
+        'sixteen':None,
+        'seventeen':None,
+        'eighteen':None,
         'form': form,
         'error_message': error_message,
         'bitmask': bitmask,
@@ -204,6 +213,12 @@ def csv(request):
             'ten':results[9],
             'eleven':results[10],
             'twelve':results[11],
+            'thirteen':results[12],
+            'fourteen':results[13],
+            'fifteen':results[14],
+            'sixteen':results[15],
+            'seventeen':results[16],
+            'eighteen':results[17],
             'form': form,
             'error_message': error_message,
             'bitmask': bitmask,
@@ -270,12 +285,12 @@ def backtesting(request):
                 if(atr_take_profit==None):
                     atr_take_profit=100
                     bitmask=bitmask-(1<<6)
-            stop_loss=100.00
-            print(3,bitmask)
+            # stop_loss=100.00
+            # print(3,bitmask)
             
             
             
-            stop_loss=float(stop_loss)
+            # stop_loss=float(stop_loss)
             data = yf.download(ticker, start_date, end_date)
             tnx=yf.download('^TNX',start_date,end_date)
             # Query CommonModel based on the strategy name
@@ -288,8 +303,11 @@ def backtesting(request):
                 
                 # Execute the Python code (assuming 'hello' function exists)
                 data, error_message = execute_python_code(python_code_string,data)
-                a,capital=backtest_1(data,stop_loss)
-                results=parameters(data,a,tnx)
+                # a,capital=backtest_1(data,stop_loss)
+                # results=parameters(data,a,tnx)
+                Testing_signals = TradingStrategy_compounding(data, normal_stop_loss, normal_take_profit, trailing_stop_loss, dynamic_exit_condition, atr_take_loss, atr_take_profit)
+                to_submit, trade_wise, every_day ,results= Testing_signals.compounding()
+                
                 
                 
 
@@ -301,8 +319,10 @@ def backtesting(request):
                     
                     # Execute the Python code (assuming 'hello' function exists)
                     data, error_message = execute_python_code(python_code_string,data)
-                    a,capital=backtest_1(data,stop_loss)
-                    results=parameters(data,a,tnx)
+                    # a,capital=backtest_1(data,stop_loss)
+                    # results=parameters(data,a,tnx)
+                    Testing_signals = TradingStrategy_compounding(data, normal_stop_loss, normal_take_profit, trailing_stop_loss, dynamic_exit_condition, atr_take_loss, atr_take_profit)
+                    to_submit, trade_wise, every_day ,results= Testing_signals.compounding()
                 else:
                     error_message = f"No strategy found with name '{strategy}'"               
                 
@@ -323,6 +343,12 @@ def backtesting(request):
         'ten':None,
         'eleven':None,
         'twelve':None,
+        'thirteen':None,
+        'fourteen':None,
+        'fifteen':None,
+        'sixteen':None,
+        'seventeen':None,
+        'eighteen':None,
         'form': form,
         'result': result,
         'error_message': error_message,
@@ -350,6 +376,12 @@ def backtesting(request):
             'ten':results[9],
             'eleven':results[10],
             'twelve':results[11],
+            'thirteen':results[12],
+            'fourteen':results[13],
+            'fifteen':results[14],
+            'sixteen':results[15],
+            'seventeen':results[16],
+            'eighteen':results[17],
             'form': form,
             'result': result,
             'error_message': error_message,

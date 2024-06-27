@@ -4,7 +4,7 @@ from .forms import StrategyForm,csvForm,userstrategy
 import yfinance as yf
 from django.urls import reverse
 from django.http import HttpResponse
-from .backtesting_frameworks import backtest_1,parameters
+from .backtesting_frameworks import Bactesting_Framework
 from django.contrib.auth.decorators import login_required
 import pandas as pd
 import numpy as np

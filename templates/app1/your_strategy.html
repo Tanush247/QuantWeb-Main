@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create Your Own Strategy</title>
+    <!-- Include Bootstrap CSS for styling -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <!-- Icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link rel='stylesheet' type='text/css' href='{% static 'app1/b.css' %}'>
+
+    <style>
+      /* This centers the form */
+      .form-container {
+        max-width: 600px;
+        margin: auto;
+        margin-top: 50px;
+      }
+      .error-message {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <!-- Classic navbar from bootsrap -->
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="{% url 'app1:home' %}">
+            <i class="bi bi-cash-coin align-middle"></i>
+            <span class="font-weight-bold">Dashboard</span>
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarToggle"
+            aria-controls="navbarToggle"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              {% if user.is_authenticated %}
+              <a class="nav-item nav-link" href="{% url 'technical-home' %}"
+                >Technical Indicators</a
+              >
+              <a class="nav-item nav-link" href="{% url 'risk-home' %}"
+                >Risk Management</a
+              >
+              {% endif %}
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+              {% if user.is_authenticated %}
+              <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-light">
+                  Logout
+                </button>
+              </form>
+              {% else %}
+              <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+              <a class="nav-item nav-link" href="{% url 'register' %}"
+                >Register</a
+              >
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <div class="container form-container">
+      <hr />
+      <div class="center-container">
+        <button type="button" class="custom-btn">
+          <i class="bi bi-filetype-py"></i></i>
+          Examples
+          <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+      <h1 class="text-center own-strategy">Create your own strategy</h1>
+      <p
+        class="text-center text-lg font-light text-foreground"
+      >
+        Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry. Lorem Ipsum has been the industry's standard dummy text ever
+        since the 1500s
+      </p>
+      <hr class="horizontal-line">
+      <h2 class="text-center get-started">Get Started</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="id_strategy">Strategy Name</label>
+          <div class="rounded-form">
+              {{ form.strategy }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="id_source">Source Code</label>
+          {{ form.source }}
+        </div>
+        <div class="button-container">
+          <button class="button secondary">Go Back</button>
+          <button class="button primary">Submit</button>
+        </div>
+      </form>
+      {% if error %}
+      <div class="alert alert-danger error-message" role="alert">
+        {{ error }}
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>

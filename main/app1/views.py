@@ -4,7 +4,8 @@ from .forms import StrategyForm,csvForm,userstrategy
 import yfinance as yf
 from django.urls import reverse
 from django.http import HttpResponse
-from .backtesting_frameworks import backtest_1,parameters
+from .backtesting_frameworks import Trading_Bot
+# from .backtesting_harsh import Trading_Bot
 from django.contrib.auth.decorators import login_required
 import pandas as pd
 import numpy as np
@@ -18,6 +19,7 @@ def risk_management(request, destination):
         ['dynamic exit condition', 4],
         ['atr based stop loss', 5],
         ['atr based take profit', 6],
+        ['alternating strategies', 7],
     ]
 
     if request.method == 'POST':
@@ -116,12 +118,13 @@ def csv(request):
             csv_file = request.FILES['csv_file']
             df = pd.read_csv(csv_file, index_col=0, parse_dates=True)
             print(df)
-            normal_stop_loss=0
-            normal_take_profit=0
-            trailing_stop_loss=0
-            dynamic_exit_condition=0
-            atr_take_loss=0
-            atr_take_profit=0
+            alternating_strategies = 'No'
+            normal_stop_loss=1
+            normal_take_profit=1000
+            trailing_stop_loss=1
+            dynamic_exit_condition=1000
+            atr_take_loss=1000
+            atr_take_profit=1000
             if(bitmask & (1<<1) !=0):
                 normal_stop_loss=form.cleaned_data['normal_stop_loss']
                 if(normal_stop_loss==None):
@@ -146,15 +149,24 @@ def csv(request):
                 atr_take_profit=form.cleaned_data['atr_take_profit']
                 if(atr_take_profit==None):
                     bitmask=bitmask-(1<<6)
+            if(bitmask & (1<<7) !=0):
+                alternating_strategies =form.cleaned_data['alternating_strategies']
+                if(alternating_strategies==None):
+                    bitmask=bitmask-(1<<7)
             print(3,bitmask)
             stop_loss=100
-            stop_loss=float(stop_loss)
+            normal_stop_loss= float(normal_stop_loss)
+            normal_take_profit= float(normal_take_profit)
+            trailing_stop_loss= float(trailing_stop_loss)
+            dynamic_exit_condition= float(dynamic_exit_condition)
+            atr_take_loss=float(atr_take_loss)
+            atr_take_profit=float(atr_take_profit)
             start_date=df.index[0]
             end_date=df.index[len(df)-1]
             # Save the CSV file to the database
             tnx=yf.download('^TNX',start_date,end_date)
-            a,capital=backtest_1(df,stop_loss)
-            results=parameters(df,a,tnx)
+            Data = Trading_Bot(df, tnx, 1000, stop_loss_percent = normal_stop_loss, trailing_stop_loss_percent = trailing_stop_loss, normal_take_profit_percent = normal_take_profit, dynamic_exit_percent = dynamic_exit_condition, atr_based_stopp_loss_multi = atr_take_loss, atr_based_take_profit_multi = atr_take_profit)
+            results = Data.backtesting()
         else:
             error_message = f"Backtesting failed"
     else:
@@ -182,6 +194,7 @@ def csv(request):
         'show_dynamic_exit_condition': bitmask & (1 << 4) != 0,
         'show_atr_take_loss': bitmask & (1 << 5) != 0,
         'show_atr_take_profit': bitmask & (1 << 6) != 0,
+        'show_alternating_strategies': bitmask & (1 << 7) != 0,
         } 
     else:
 
@@ -207,6 +220,7 @@ def csv(request):
             'show_dynamic_exit_condition': bitmask & (1 << 4) != 0,
             'show_atr_take_loss': bitmask & (1 << 5) != 0,
             'show_atr_take_profit': bitmask & (1 << 6) != 0,
+            'show_alternating_strategies': bitmask & (1 << 7) != 0,
         }
     
     return render(request, 'app1/csv.html', context)
@@ -228,42 +242,58 @@ def backtesting(request):
             strategy = form.cleaned_data['strategy']
             end_date = form.cleaned_data['end_date']
             start_date = form.cleaned_data['start_date']
-            normal_stop_loss=0
-            normal_take_profit=0
-            trailing_stop_loss=0
-            dynamic_exit_condition=0
-            atr_take_loss=0
-            atr_take_profit=0
+            alternating_strategies = 'No'
+            normal_stop_loss=1
+            normal_take_profit=1000
+            trailing_stop_loss=1
+            dynamic_exit_condition=1000
+            atr_take_loss=1000
+            atr_take_profit=1000
             if(bitmask & (1<<1) !=0):
                 normal_stop_loss=form.cleaned_data['normal_stop_loss']
                 if(normal_stop_loss==None):
+                    normal_stop_loss  = 1
                     bitmask=bitmask-(1<<1)
             if(bitmask & (1<<2) !=0):
                 normal_take_profit=form.cleaned_data['normal_take_profit']
                 if(normal_take_profit==None):
+                    normal_take_profit = 1000
                     bitmask=bitmask-(1<<2)
             if(bitmask & (1<<3) !=0):
                 trailing_stop_loss=form.cleaned_data['trailing_stop_loss']
                 if(trailing_stop_loss==None):
+                    trailing_stop_loss = 1
                     bitmask=bitmask-(1<<3)
             if(bitmask & (1<<4) !=0):
                 dynamic_exit_condition=form.cleaned_data['dynamic_exit_condition']
                 if(dynamic_exit_condition==None):
+                    dynamic_exit_condition = 1000
                     bitmask=bitmask-(1<<4)
             if(bitmask & (1<<5) !=0):
                 atr_take_loss=form.cleaned_data['atr_stop_loss']
                 if(atr_take_loss==None):
+                    atr_take_loss = 1000
                     bitmask=bitmask-(1<<5)
             if(bitmask & (1<<6) !=0):
                 atr_take_profit=form.cleaned_data['atr_take_profit']
                 if(atr_take_profit==None):
+                    atr_take_profit = 1000
                     bitmask=bitmask-(1<<6)
-            stop_loss=100.00
-            print(3,bitmask)
+            if(bitmask & (1<<7) !=0):
+                alternating_strategies=form.cleaned_data['alternating_strategies']
+                if(alternating_strategies==None):
+                    alternating_strategies = 'No'
+                    
+                    bitmask=bitmask-(1<<7)
+            print(bitmask)
             
             
-            
-            stop_loss=float(stop_loss)
+            normal_stop_loss= float(normal_stop_loss)
+            normal_take_profit= float(normal_take_profit)
+            trailing_stop_loss= float(trailing_stop_loss)
+            dynamic_exit_condition= float(dynamic_exit_condition)
+            atr_take_loss=float(atr_take_loss)
+            atr_take_profit=float(atr_take_profit)
             data = yf.download(ticker, start_date, end_date)
             tnx=yf.download('^TNX',start_date,end_date)
             # Query CommonModel based on the strategy name
@@ -276,8 +306,10 @@ def backtesting(request):
                 
                 # Execute the Python code (assuming 'hello' function exists)
                 data, error_message = execute_python_code(python_code_string,data)
-                a,capital=backtest_1(data,stop_loss)
-                results=parameters(data,a,tnx)
+                # a,capital=backtest_1(data,stop_loss)
+                # results=parameters(data,a,tnx)
+                Data = Trading_Bot(data, tnx, 1000, stop_loss_percent = normal_stop_loss, trailing_stop_loss_percent = trailing_stop_loss, normal_take_profit_percent = normal_take_profit, dynamic_exit_percent = dynamic_exit_condition, atr_based_stopp_loss_multi = atr_take_loss, atr_based_take_profit_multi = atr_take_profit)
+                results = Data.backtesting()
                 
                 
 
@@ -289,8 +321,10 @@ def backtesting(request):
                     
                     # Execute the Python code (assuming 'hello' function exists)
                     data, error_message = execute_python_code(python_code_string,data)
-                    a,capital=backtest_1(data,stop_loss)
-                    results=parameters(data,a,tnx)
+                    # a,capital=backtest_1(data,stop_loss)
+                    # results=parameters(data,a,tnx)
+                    Data = Trading_Bot(data, tnx, 1000, stop_loss_percent = normal_stop_loss, trailing_stop_loss_percent = trailing_stop_loss, normal_take_profit_percent = normal_take_profit, dynamic_exit_percent = dynamic_exit_condition, atr_based_stopp_loss_multi = atr_take_loss, atr_based_take_profit_multi = atr_take_profit)
+                    results = Data.backtesting()
                 else:
                     error_message = f"No strategy found with name '{strategy}'"               
                 
@@ -321,6 +355,7 @@ def backtesting(request):
         'show_dynamic_exit_condition': bitmask & (1 << 4) != 0,
         'show_atr_take_loss': bitmask & (1 << 5) != 0,
         'show_atr_take_profit': bitmask & (1 << 6) != 0,
+        'show_alternating_strategies': bitmask & (1 << 7) != 0,
         
         } 
     else:
@@ -348,6 +383,7 @@ def backtesting(request):
             'show_dynamic_exit_condition': bitmask & (1 << 4) != 0,
             'show_atr_take_loss': bitmask & (1 << 5) != 0,
             'show_atr_take_profit': bitmask & (1 << 6) != 0,
+            'show_alternating_strategies': bitmask & (1 << 7) != 0,
             
         }
     return render(request, 'app1/result.html', context)

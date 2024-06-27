@@ -278,17 +278,44 @@ def backtesting(request):
             stop_loss=float(stop_loss)
             data = yf.download(ticker, start_date, end_date)
             tnx=yf.download('^TNX',start_date,end_date)
-            # Query CommonModel based on the strategy name
+            print(len(data),len(tnx))
+            print("Data index:", data.index)
+            print("TNX index:",tnx.index)
+                        # Query CommonModel based on the strategy name
             object1 = CommonModel.objects.filter(name=strategy).first()
             object2=UserModel.objects.filter(owner=user,name=strategy).first()
             if object1:
+                
                 python_code_string = object1.source
                 
                 # Example arguments for the function call
                 
                 # Execute the Python code (assuming 'hello' function exists)
                 data, error_message = execute_python_code(python_code_string,data)
-                a,capital=backtest_1(data,stop_loss)
+                # Inside backtesting function in views.py
+                use_normal_stop_loss = bitmask & (1 << 1) != 0
+                use_normal_take_profit = bitmask & (1 << 2) != 0
+                use_trailing_stop_loss = bitmask & (1 << 3) != 0
+                use_dynamic_exit_condition = bitmask & (1 << 4) != 0
+                use_atr_stop_loss = bitmask & (1 << 5) != 0
+                use_atr_take_profit = bitmask & (1 << 6) != 0
+
+                 # Call backtest_1 with the appropriate arguments
+                a, capital = backtest_1(data,
+                stop_loss_percent=0.1,  # Example default values
+                take_profit_percent=0.1,
+                use_normal_stop_loss=use_normal_stop_loss,
+                use_normal_take_profit=use_normal_take_profit,
+                use_trailing_stop_loss=use_trailing_stop_loss,
+                use_dynamic_exit_condition=use_dynamic_exit_condition,
+                use_atr_stop_loss=use_atr_stop_loss,
+                use_atr_take_profit=use_atr_take_profit,  # Example default values
+                normal_stop_loss=form.cleaned_data.get('normal_stop_loss') if use_normal_stop_loss else 100,
+                normal_take_profit=form.cleaned_data.get('normal_take_profit') if use_normal_take_profit else 100,
+                trailing_stop_loss=form.cleaned_data.get('trailing_stop_loss') if use_trailing_stop_loss else 100,
+                dynamic_exit_condition=form.cleaned_data.get('dynamic_exit_condition') if use_dynamic_exit_condition else 100,
+                atr_stop_loss=form.cleaned_data.get('atr_stop_loss') if use_atr_stop_loss else 100,
+                atr_take_profit=form.cleaned_data.get('atr_take_profit') if use_atr_take_profit else 100,)
                 results=parameters(data,a,tnx)
                 
                 
@@ -296,12 +323,34 @@ def backtesting(request):
             else:
                 if(object2):
                     python_code_string = object2.source
-                
+                    
                     # Example arguments for the function call
                     
                     # Execute the Python code (assuming 'hello' function exists)
                     data, error_message = execute_python_code(python_code_string,data)
-                    a,capital=backtest_1(data,stop_loss)
+                    use_normal_stop_loss = bitmask & (1 << 1) != 0
+                    use_normal_take_profit = bitmask & (1 << 2) != 0
+                    use_trailing_stop_loss = bitmask & (1 << 3) != 0
+                    use_dynamic_exit_condition = bitmask & (1 << 4) != 0
+                    use_atr_stop_loss = bitmask & (1 << 5) != 0
+                    use_atr_take_profit = bitmask & (1 << 6) != 0
+
+                 # Call backtest_1 with the appropriate arguments
+                    a, capital = backtest_1(data,
+                    stop_loss_percent=0.1,  # Example default values
+                    take_profit_percent=0.1,  # Example default values
+                    use_normal_stop_loss=use_normal_stop_loss,
+                    use_normal_take_profit=use_normal_take_profit,
+                    use_trailing_stop_loss=use_trailing_stop_loss,
+                    use_dynamic_exit_condition=use_dynamic_exit_condition,
+                    use_atr_stop_loss=use_atr_stop_loss,
+                    use_atr_take_profit=use_atr_take_profit,
+                    normal_stop_loss=form.cleaned_data.get('normal_stop_loss') if use_normal_stop_loss else 100,
+                    normal_take_profit=form.cleaned_data.get('normal_take_profit') if use_normal_take_profit else 100,
+                    trailing_stop_loss=form.cleaned_data.get('trailing_stop_loss') if use_trailing_stop_loss else 100,
+                    dynamic_exit_condition=form.cleaned_data.get('dynamic_exit_condition') if use_dynamic_exit_condition else 100,
+                    atr_stop_loss=form.cleaned_data.get('atr_stop_loss') if use_atr_stop_loss else 100,
+                    atr_take_profit=form.cleaned_data.get('atr_take_profit') if use_atr_take_profit else 100)
                     results=parameters(data,a,tnx)
                 else:
                     error_message = f"No strategy found with name '{strategy}'"               

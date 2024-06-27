@@ -125,6 +125,15 @@
                       {{ form.atr_take_profit }}
                   </div>
               {% endif %}
+
+                
+              {% if show_alternating_strategies %}
+              <div class="form-group">
+                  <label for="{{ form.alternating_strategies.id_for_label }}">Alternating Strategies:</label>
+                  {{ form.alternating_strategies }}
+              </div>
+              {% endif %}
+
               <div class="form-group">
                 <label for="{{ form.strategy.id_for_label }}">Strategy:</label>
                 {{ form.strategy }}
@@ -166,5 +175,22 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alternatingStrategiesSelect = document.querySelector('[name="alternating_strategies"]');
+            const strategySelect = document.getElementById('strategy-select');
+            const strategyMultiSelect = document.getElementById('strategy-multi-select');
+
+            alternatingStrategiesSelect.addEventListener('change', function() {
+                if (this.value === 'yes') {
+                    strategySelect.style.display = 'none';
+                    strategyMultiSelect.style.display = 'block';
+                } else {
+                    strategySelect.style.display = 'block';
+                    strategyMultiSelect.style.display = 'none';
+                }
+            });
+        });
+    </script> -->
 </body>
 </html>

@@ -120,6 +120,13 @@
                       {{ form.atr_take_profit }}
                   </div>
               {% endif %}
+
+              {% if show_alternating_strategies %}
+                  <div class="form-group">
+                      <label for="{{ form.alternating_strategies.id_for_label }}">Alternating Strategies:</label>
+                      {{ form.alternating_strategies }}
+                  </div>
+              {% endif %}
               <div class="form-group">
                 <label for="{{ form.strategy.id_for_label }}">Strategy:</label>
                 {{ form.strategy }}

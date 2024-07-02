@@ -37,13 +37,13 @@ class backtesting_class ():
         self.maxima_for_risk = 0
         self.minima_for_risk = 0
 
-        self.normal_sl = float(normal_sl)
+        self.normal_sl = float(self.capital_initial*(1-normal_sl))
         self.trailing_sl_percent =float(trailing_sl_percent) 
         self.trailing_sl = 0
         self.atr_sl_multiplier = float (atr_sl_multiplier)
         self.atr_sl = 0
 
-        self.normal_tp = float(normal_tp)
+        self.normal_tp =  float(self.capital_initial*(1+normal_tp))
         self.trailing_tp_percent = float(trailing_tp_percent)
         self.trailing_tp = 0
         self.atr_tp_multiplier = float(atr_tp_multiplier)
@@ -159,6 +159,7 @@ class backtesting_class ():
 
 
     def set_sl (self, i ):
+        
         if (self.bitmask & (1<<3)) !=0 :
             self.trailing_sl = (1 - self.trailing_sl_percent)*self.portfolio_value[i]
             self.maxima_for_risk = self.portfolio_value[i]
@@ -171,6 +172,7 @@ class backtesting_class ():
             
 
     def set_tp (self, i ):
+        
         if (self.bitmask & (1<<4)) !=0 :
             self.trailing_tp = (1 + self.trailing_tp_percent)*self.portfolio_value[i]  
             self.minima_for_risk = self.portfolio_value[i]

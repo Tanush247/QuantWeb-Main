@@ -4,7 +4,7 @@ from .forms import StrategyForm,csvForm,userstrategy
 import yfinance as yf
 from django.urls import reverse
 from django.http import HttpResponse
-from .backtesting_frameworks import backtest_1,parameters
+from .backtesting_frameworks import backtesting_class
 from django.contrib.auth.decorators import login_required
 import pandas as pd
 import numpy as np
@@ -116,51 +116,46 @@ def csv(request):
             csv_file = request.FILES['csv_file']
             df = pd.read_csv(csv_file, index_col=0, parse_dates=True)
             print(df)
-            normal_stop_loss=100
-            normal_take_profit=100
-            trailing_stop_loss=100
-            dynamic_exit_condition=100
-            atr_take_loss=100
-            atr_take_profit=100
+            normal_stop_loss=0
+            normal_take_profit=0
+            trailing_stop_loss=0
+            dynamic_exit_condition=0
+            atr_take_loss=0
+            atr_take_profit=0
             if(bitmask & (1<<1) !=0):
                 normal_stop_loss=form.cleaned_data['normal_stop_loss']
                 if(normal_stop_loss==None):
-                    normal_stop_loss=100
                     bitmask=bitmask-(1<<1)
             if(bitmask & (1<<2) !=0):
                 normal_take_profit=form.cleaned_data['normal_take_profit']
                 if(normal_take_profit==None):
-                    normal_take_profit=100
                     bitmask=bitmask-(1<<2)
             if(bitmask & (1<<3) !=0):
                 trailing_stop_loss=form.cleaned_data['trailing_stop_loss']
                 if(trailing_stop_loss==None):
-                    trailing_stop_loss=100
                     bitmask=bitmask-(1<<3)
             if(bitmask & (1<<4) !=0):
                 dynamic_exit_condition=form.cleaned_data['dynamic_exit_condition']
                 if(dynamic_exit_condition==None):
-                    dynamic_exit_condition=100
                     bitmask=bitmask-(1<<4)
             if(bitmask & (1<<5) !=0):
                 atr_take_loss=form.cleaned_data['atr_stop_loss']
                 if(atr_take_loss==None):
-                    atr_take_loss=100
                     bitmask=bitmask-(1<<5)
             if(bitmask & (1<<6) !=0):
                 atr_take_profit=form.cleaned_data['atr_take_profit']
                 if(atr_take_profit==None):
-                    atr_take_profit=100
                     bitmask=bitmask-(1<<6)
-            print(3,bitmask)
-            stop_loss=100
-            stop_loss=float(stop_loss)
+            
+
             start_date=df.index[0]
             end_date=df.index[len(df)-1]
-            # Save the CSV file to the database
+        
             tnx=yf.download('^TNX',start_date,end_date)
-            a,capital=backtest_1(df,stop_loss)
-            results=parameters(df,a,tnx)
+
+            a = backtesting_class(df, bitmask, normal_stop_loss, normal_take_profit, trailing_stop_loss, dynamic_exit_condition, atr_take_loss, atr_take_profit, tnx)
+            results = a.start_backtest()
+
         else:
             error_message = f"Backtesting failed"
     else:
@@ -222,7 +217,8 @@ def csv(request):
 def backtesting(request):
     bitmask = int(request.GET.get('bitmask', 0))
     print(1,bitmask)
-    user = request.user 
+    user = request.user
+    
     result = None
     error_message = None
     results=None
@@ -234,81 +230,81 @@ def backtesting(request):
             strategy = form.cleaned_data['strategy']
             end_date = form.cleaned_data['end_date']
             start_date = form.cleaned_data['start_date']
-            normal_stop_loss=100
-            normal_take_profit=100
-            trailing_stop_loss=100
-            dynamic_exit_condition=100
-            atr_take_loss=100
-            atr_take_profit=100
+            normal_stop_loss=0
+            normal_take_profit=0
+            trailing_stop_loss=0
+            dynamic_exit_condition=0
+            atr_take_loss=0
+            atr_take_profit=0
             if(bitmask & (1<<1) !=0):
                 normal_stop_loss=form.cleaned_data['normal_stop_loss']
                 if(normal_stop_loss==None):
-                    normal_stop_loss=100
                     bitmask=bitmask-(1<<1)
+                    normal_stop_loss = 0
             if(bitmask & (1<<2) !=0):
                 normal_take_profit=form.cleaned_data['normal_take_profit']
                 if(normal_take_profit==None):
-                    normal_take_profit=100
                     bitmask=bitmask-(1<<2)
+                    normal_take_profit = 0
             if(bitmask & (1<<3) !=0):
                 trailing_stop_loss=form.cleaned_data['trailing_stop_loss']
                 if(trailing_stop_loss==None):
-                    trailing_stop_loss=100
                     bitmask=bitmask-(1<<3)
+                    trailing_stop_loss = 0
             if(bitmask & (1<<4) !=0):
                 dynamic_exit_condition=form.cleaned_data['dynamic_exit_condition']
                 if(dynamic_exit_condition==None):
-                    dynamic_exit_condition=100
                     bitmask=bitmask-(1<<4)
+                    dynamic_exit_condition = 0
             if(bitmask & (1<<5) !=0):
                 atr_take_loss=form.cleaned_data['atr_stop_loss']
                 if(atr_take_loss==None):
-                    atr_take_loss=100
                     bitmask=bitmask-(1<<5)
+                    atr_take_loss = 0
             if(bitmask & (1<<6) !=0):
                 atr_take_profit=form.cleaned_data['atr_take_profit']
                 if(atr_take_profit==None):
-                    atr_take_profit=100
                     bitmask=bitmask-(1<<6)
-            stop_loss=100.00
-            print(3,bitmask)
-            
-            
-            
-            stop_loss=float(stop_loss)
+                    atr_take_profit = 0
+           
+
             data = yf.download(ticker, start_date, end_date)
             tnx=yf.download('^TNX',start_date,end_date)
-            # Query CommonModel based on the strategy name
+           
+           
             object1 = CommonModel.objects.filter(name=strategy).first()
             object2=UserModel.objects.filter(owner=user,name=strategy).first()
             if object1:
                 python_code_string = object1.source
                 
-                # Example arguments for the function call
                 
-                # Execute the Python code (assuming 'hello' function exists)
                 data, error_message = execute_python_code(python_code_string,data)
-                a,capital=backtest_1(data,stop_loss)
-                results=parameters(data,a,tnx)
-                
-                
 
+                a = backtesting_class( bitmask,data, normal_stop_loss, normal_take_profit, trailing_stop_loss, dynamic_exit_condition, atr_take_loss, atr_take_profit, tnx)
+                results = a.start_backtest()
+
+                
+            
             else:
                 if(object2):
                     python_code_string = object2.source
                 
-                    # Example arguments for the function call
-                    
-                    # Execute the Python code (assuming 'hello' function exists)
                     data, error_message = execute_python_code(python_code_string,data)
-                    a,capital=backtest_1(data,stop_loss)
-                    results=parameters(data,a,tnx)
+
+                    a = backtesting_class(data, bitmask, normal_stop_loss, normal_take_profit, trailing_stop_loss, dynamic_exit_condition, atr_take_loss, atr_take_profit, tnx)
+                    results = a.start_backtest()
+
                 else:
                     error_message = f"No strategy found with name '{strategy}'"               
                 
     else:
         
+        
         form = StrategyForm()
+
+
+
+        
     if(results==None):
        context = {
         'first':None,
@@ -336,7 +332,7 @@ def backtesting(request):
         
         } 
     else:
-
+        
         context = {
             'first':results[0],
             'second':results[1],
@@ -363,7 +359,6 @@ def backtesting(request):
             
         }
     return render(request, 'app1/result.html', context)
-
 
 @login_required
 def contact(request):

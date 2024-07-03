@@ -51,6 +51,11 @@ class backtesting_class ():
         
 
         self.tnx_close = tnx['Close']
+        if isinstance(data.index, pd.DatetimeIndex):
+            self.dates = data.index.tolist()
+        else :
+            self.dates = data['datetime']     
+
 
         if ((self.atr_sl_multiplier or self.atr_tp_multiplier)!= 0 ) :
             df = pd.DataFrame()
@@ -311,7 +316,7 @@ class backtesting_class ():
             exit_index = self.exit[i]
             self.returns_for_sharpe.append((100*self.pl[i]/(self.portfolio_value[entry_index])-(self.tnx_close[exit_index])/(np.sqrt(252))))
 
-        return (self.returns_percent , self.benchmark,self.number_of_trades, np.max(self.duration),np.mean(self.duration),np.sum(self.pl) ,np.sum(self.pl)- 20 * self.number_of_trades , np.max(self.drawdown_for_all_trades),np.mean(self.drawdown_for_all_trades), np.max(self.dip),np.mean(self.dip),np.sqrt(252)*(np.mean(self.returns_for_sharpe)/(np.std(self.returns_for_sharpe))))
+        return (self.returns_percent , self.benchmark,self.number_of_trades, np.max(self.duration),np.mean(self.duration),np.sum(self.pl) ,np.sum(self.pl)- 20 * self.number_of_trades , np.max(self.drawdown_for_all_trades),np.mean(self.drawdown_for_all_trades), np.max(self.dip),np.mean(self.dip),np.sqrt(252)*(np.mean(self.returns_for_sharpe)/(np.std(self.returns_for_sharpe))) , self.portfolio_value, self.dates)
 
 
 

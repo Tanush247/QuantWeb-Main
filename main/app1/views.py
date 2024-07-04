@@ -8,6 +8,9 @@ from .backtesting_frameworks import backtesting_class
 from django.contrib.auth.decorators import login_required
 import pandas as pd
 import numpy as np
+import io
+import plotly.express as px
+
 @login_required
 def risk_management(request, destination):
     array = [
@@ -110,6 +113,10 @@ def csv(request):
     print(2,bitmask)
     error_message=None
     results=None
+
+    port = None
+    dates = None
+
     if request.method == "POST":
         form = csvForm(request.POST,request.FILES)
         if form.is_valid():
@@ -156,10 +163,61 @@ def csv(request):
             a = backtesting_class(df, bitmask, normal_stop_loss, normal_take_profit, trailing_stop_loss, dynamic_exit_condition, atr_take_loss, atr_take_profit, tnx)
             results = a.start_backtest()
 
+            if (results != None) :
+                port = (results[12])
+                dates = (results[13])
+
+                fig = px.line( x=dates, y=port)
+                fig.update_yaxes(tickprefix='INR ')
+
+                fig.update_layout(
+                title={
+                    'text': 'Performance on CSV ',
+                    'y':0.9,
+                    'x':0.5,
+                    'xanchor': 'center',
+                    'yanchor': 'top'
+                },
+
+                xaxis_title="Time Period",
+                yaxis_title="Portfolio Value (INR)",
+                title_font=dict(size=24, color='black', family='Arial'),
+
+                xaxis=dict(
+
+                    showline=True,
+                    showgrid=True,
+                    showticklabels=True,
+                    linecolor='rgb(204, 204, 204)',
+                    linewidth=1,
+                    ticks='outside',
+                    tickfont=dict(
+                        family='Arial',
+                        size=12,
+                        color='rgb(82, 82, 82)',
+                    ),
+
+                ),
+
+                yaxis=dict(
+                    showgrid=True,
+                    zeroline=False,
+                    showline=True,
+                    showticklabels=True,
+                ),
+
+                plot_bgcolor='white' )
+
+                fig.update_traces(mode='lines', line_shape='linear', line=dict(width=2))
+                plot_div = fig.to_html(full_html=False)
+
+
         else:
             error_message = f"Backtesting failed"
     else:
         form=csvForm()
+
+
     if(results==None):
        context = {
         'first':None,
@@ -174,6 +232,8 @@ def csv(request):
         'ten':None,
         'eleven':None,
         'twelve':None,
+        'thirteen':0,
+        'graph' : None,
         'form': form,
         'error_message': error_message,
         'bitmask': bitmask,
@@ -185,7 +245,6 @@ def csv(request):
         'show_atr_take_profit': bitmask & (1 << 6) != 0,
         } 
     else:
-
         context = {
             'first':results[0],
             'second':results[1],
@@ -199,6 +258,9 @@ def csv(request):
             'ten':results[9],
             'eleven':results[10],
             'twelve':results[11],
+            'twelve':results[11],
+            'thirteen':1,
+            'graph' : plot_div,
             'form': form,
             'error_message': error_message,
             'bitmask': bitmask,
@@ -222,6 +284,10 @@ def backtesting(request):
     result = None
     error_message = None
     results=None
+
+    port = None
+    dates = None
+
     if request.method == "POST":
         form = StrategyForm(request.POST)
         if form.is_valid():
@@ -283,8 +349,56 @@ def backtesting(request):
                 a = backtesting_class( bitmask,data, normal_stop_loss, normal_take_profit, trailing_stop_loss, dynamic_exit_condition, atr_take_loss, atr_take_profit, tnx)
                 results = a.start_backtest()
 
+                if (results != None) :
+                    port = (results[12])
+                    dates = (results[13])
+
+                    fig = px.line( x=dates, y=port, title=f'{ticker}')
+                    fig.update_yaxes(tickprefix='INR ')
+
+                    fig.update_layout(
+                    title={
+                        'text': f'{strategy} Strategy Performance on {ticker} ',
+                        'y':0.9,
+                        'x':0.5,
+                        'xanchor': 'center',
+                        'yanchor': 'top'
+                    },
+
+                    xaxis_title="Time Period",
+                    yaxis_title="Portfolio Value (INR)",
+                    title_font=dict(size=24, color='black', family='Arial'),
+
+                    xaxis=dict(
+
+                        showline=True,
+                        showgrid=True,
+                        showticklabels=True,
+                        linecolor='rgb(204, 204, 204)',
+                        linewidth=1,
+                        ticks='outside',
+                        tickfont=dict(
+                            family='Arial',
+                            size=12,
+                            color='rgb(82, 82, 82)',
+                        ),
+
+                    ),
+
+                    yaxis=dict(
+                        showgrid=True,
+                        zeroline=False,
+                        showline=True,
+                        showticklabels=True,
+                    ),
+
+                    plot_bgcolor='white' )
+
+                    fig.update_traces(mode='lines', line_shape='linear', line=dict(width=2))
+                    plot_div = fig.to_html(full_html=False)
+
+
                 
-            
             else:
                 if(object2):
                     python_code_string = object2.source
@@ -293,12 +407,60 @@ def backtesting(request):
 
                     a = backtesting_class(data, bitmask, normal_stop_loss, normal_take_profit, trailing_stop_loss, dynamic_exit_condition, atr_take_loss, atr_take_profit, tnx)
                     results = a.start_backtest()
+                        
+                    if (results != None) :
+                        port = (results[12])
+                        dates = (results[13])
+
+                        fig = px.line( x=dates, y=port, title=f'{ticker}')
+                        fig.update_yaxes(tickprefix='INR ')
+
+                        fig.update_layout(
+                        title={
+                            'text': f'{strategy} Strategy Performance on {ticker} ',
+                            'y':0.9,
+                            'x':0.5,
+                            'xanchor': 'center',
+                            'yanchor': 'top'
+                        },
+
+                        xaxis_title="Time Period",
+                        yaxis_title="Portfolio Value (INR)",
+                        title_font=dict(size=24, color='black', family='Arial'),
+
+                        xaxis=dict(
+
+                            showline=True,
+                            showgrid=True,
+                            showticklabels=True,
+                            linecolor='rgb(204, 204, 204)',
+                            linewidth=1,
+                            ticks='outside',
+                            tickfont=dict(
+                                family='Arial',
+                                size=12,
+                                color='rgb(82, 82, 82)',
+                            ),
+
+                        ),
+
+                        yaxis=dict(
+                            showgrid=True,
+                            zeroline=False,
+                            showline=True,
+                            showticklabels=True,
+                        ),
+
+                        plot_bgcolor='white' )
+
+                        fig.update_traces(mode='lines', line_shape='linear', line=dict(width=2))
+                        plot_div = fig.to_html(full_html=False)    
+                                
 
                 else:
                     error_message = f"No strategy found with name '{strategy}'"               
                 
     else:
-        
         
         form = StrategyForm()
 
@@ -319,6 +481,9 @@ def backtesting(request):
         'ten':None,
         'eleven':None,
         'twelve':None,
+        'thirteen':0,
+        'graph' : None,
+
         'form': form,
         'result': result,
         'error_message': error_message,
@@ -346,6 +511,8 @@ def backtesting(request):
             'ten':results[9],
             'eleven':results[10],
             'twelve':results[11],
+            'thirteen':1,
+            'graph' : plot_div,
             'form': form,
             'result': result,
             'error_message': error_message,

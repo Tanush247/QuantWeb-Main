@@ -41,7 +41,7 @@
         <div class="container">
           <a class="navbar-brand mr-4" href="{% url 'app1:home' %}">
             <i class="bi bi-cash-coin align-middle"></i>
-            <span class="font-weight-bold">Dashboard</span>
+            <span class="font-weight-bold"> Backtesting Dashboard</span>
           </a>
           <button
             class="navbar-toggler"
@@ -90,21 +90,13 @@
       <hr />
       <div class="center-container">
         <button type="button" class="custom-btn">
-          <i class="bi bi-filetype-py"></i></i>
-          Examples
-          <i class="bi bi-arrow-right"></i>
+
         </button>
       </div>
       <h1 class="text-center own-strategy">Create your own strategy</h1>
-      <p
-        class="text-center text-lg font-light text-foreground"
-      >
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text ever
-        since the 1500s
-      </p>
+
       <hr class="horizontal-line">
-      <h2 class="text-center get-started">Get Started</h2>
+
       <form method="post">
         {% csrf_token %}
         <div class="form-group">
@@ -118,7 +110,7 @@
           {{ form.source }}
         </div>
         <div class="button-container">
-          <button class="button secondary">Go Back</button>
+ 
           <button class="button primary">Submit</button>
         </div>
       </form>
